@@ -7,7 +7,8 @@ suite : '{' statement* '}';
 statement
     : suite #block
     | declarationStmt #varDefStmt
-    | If '(' expression ')' trueStmt=statement (Else falseStmt=statement)? #ifStmt
+    | If '(' expression ')' trueStmt=statement
+      (Else falseStmt=statement)? #ifStmt
     | Return expression? ';' #returnStmt
     | While '(' expression ')' statement #whileStmt
     | For '(' init? ';' cond? ';' iter? ')' statement #forStmt
@@ -17,10 +18,19 @@ statement
     | ';' #emptyStmt
     ;
 declarationStmt : varDef ';';
+creator
+    : returnType ('[' expression ']')+ ('[' ']')* #arrayCreator
+    | returnType ('('')')? #objectCreator
+    ;
 expression
     : primary #atomExpr
+    | expression '.' Identifier ('(' expressionList? ')')? #memberExpr
+    | <assoc=right> New creator #createExpr
     | expression '[' expression ']' #indexExpr
     | expression '(' expressionList? ')' #functionExpr
+    | '[' '&' ']' ('(' functionParameterDef ')') '-' '>' suite '(' expressionList ')' #lambdaExpr
+    | expression suffix = ('++' | '--') #suffixExpr
+    | <assoc=right> prefix = ('++' | '--' | '!' | '~' | '-' | '+') expression #prefixExpr
     | expression op = ('*' | '/' | '%') expression #binaryExpr
     | expression op = ('+' | '-') expression #binaryExpr
     | expression op = ('<<' | '>>') expression #binaryExpr
@@ -31,15 +41,25 @@ expression
     | expression op = '|' expression #binaryExpr
     | expression op = '&&' expression #binaryExpr
     | expression op = '||' expression #binaryExpr
-    | <assoc=right> expression '=' expression #assignExpr ;
+    | <assoc=right> expression '=' expression #assignExpr
+    ;
 varDef : varType varDeclaration (',' varDeclaration)*;
 varDeclaration : Identifier ('=' expression)?;
-returnType: Void | varType | arrayType;
-varType : (builtinType | Identifier);
+returnType: Void | varType ;
+varType : (builtinType | Identifier | arrayType);
 builtinType : Int | Bool | String;
-arrayType : varType('[' ']')+;
-primary : '(' expression ')' | Identifier | literal ;
-literal : DecimalInteger | True | False ;
+arrayType : (builtinType | Identifier)('[' ']')+;
+primary : '(' expression ')' | Identifier | literal | This | NULL;
+//字符串处理
+fragment ESC :
+    DbQuotation | '\\n' ;
+STRING : '"' (ESC|.)*? '"';
+literal
+    : DecimalInteger
+    | True
+    | False
+    | STRING
+    ;
 
 init : expression | (returnType varDeclaration);
 cond : expression;
