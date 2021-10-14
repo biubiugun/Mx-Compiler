@@ -18,6 +18,7 @@ statement
     | ';' #emptyStmt
     ;
 declarationStmt : varDef ';';
+
 creator
     : returnType ('[' expression ']')+ ('[' ']')* #arrayCreator
     | returnType ('('')')? #objectCreator
