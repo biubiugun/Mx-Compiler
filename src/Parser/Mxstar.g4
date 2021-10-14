@@ -4,14 +4,21 @@ functionDef : returnType Identifier '(' functionParameterDef ')'suite;
 functionParameterDef : (varType Identifier (',' varType Identifier)* )?;
 expressionList : expression (',' expression)*;
 suite : '{' statement* '}';
-statement : suite #block
+statement
+    : suite #block
     | declarationStmt #varDefStmt
     | If '(' expression ')' trueStmt=statement (Else falseStmt=statement)? #ifStmt
     | Return expression? ';' #returnStmt
     | While '(' expression ')' statement #whileStmt
-    | expression ';' #pureExprStmt | ';' #emptyStmt ;
+    | For '(' init? ';' cond? ';' iter? ')' statement #forStmt
+    | Continue ';' #continueStmt
+    | Break ';' #breakStmt
+    | expression ';' #pureExprStmt
+    | ';' #emptyStmt
+    ;
 declarationStmt : varDef ';';
-expression : primary #atomExpr
+expression
+    : primary #atomExpr
     | expression '[' expression ']' #indexExpr
     | expression '(' expressionList? ')' #functionExpr
     | expression op = ('*' | '/' | '%') expression #binaryExpr
@@ -33,6 +40,10 @@ builtinType : Int | Bool | String;
 arrayType : varType('[' ']')+;
 primary : '(' expression ')' | Identifier | literal ;
 literal : DecimalInteger | True | False ;
+
+init : expression | (returnType varDeclaration);
+cond : expression;
+iter : expression;
 
 Int : 'int';
 Bool : 'bool';
