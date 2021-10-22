@@ -5,44 +5,44 @@ functionParameterDef : (varType Identifier (',' varType Identifier)* )?;
 expressionList : expression (',' expression)*;
 suite : '{' statement* '}';
 statement
-    : suite #block
-    | declarationStmt #varDefStmt
+    : suite                                                                                     #block
+    | declarationStmt                                                                           #varDefStmt
     | If '(' expression ')' trueStmt=statement
-      (Else falseStmt=statement)? #ifStmt
-    | Return expression? ';' #returnStmt
-    | While '(' expression ')' statement #whileStmt
-    | For '(' init? ';' cond? ';' iter? ')' statement #forStmt
-    | Continue ';' #continueStmt
-    | Break ';' #breakStmt
-    | expression ';' #pureExprStmt
-    | ';' #emptyStmt
+      (Else falseStmt=statement)?                                                               #ifStmt
+    | Return expression? ';'                                                                    #returnStmt
+    | While '(' expression ')' statement                                                        #whileStmt
+    | For '(' init? ';' cond? ';' iter? ')' statement                                           #forStmt
+    | Continue ';'                                                                              #continueStmt
+    | Break ';'                                                                                 #breakStmt
+    | expression ';'                                                                            #pureExprStmt
+    | ';'                                                                                       #emptyStmt
     ;
 declarationStmt : varDef ';';
 
 creator
-    : returnType ('[' expression ']')+ ('[' ']')* #arrayCreator
-    | returnType ('('')')? #objectCreator
+    : returnType ('[' expression ']')+ ('[' ']')*                                               #arrayCreator
+    | returnType ('('')')?                                                                      #objectCreator
     ;
 expression
-    : primary #atomExpr
-    | expression '.' Identifier ('(' expressionList? ')')? #memberExpr
-    | <assoc=right> New creator #createExpr
-    | expression '[' expression ']' #indexExpr
-    | expression '(' expressionList? ')' #functionExpr
-    | '[' '&' ']' ('(' functionParameterDef ')') '-' '>' suite '(' expressionList ')' #lambdaExpr
-    | expression suffix = ('++' | '--') #suffixExpr
-    | <assoc=right> prefix = ('++' | '--' | '!' | '~' | '-' | '+') expression #prefixExpr
-    | expression op = ('*' | '/' | '%') expression #binaryExpr
-    | expression op = ('+' | '-') expression #binaryExpr
-    | expression op = ('<<' | '>>') expression #binaryExpr
-    | expression op = ('<' | '<=' | '>' | '>=') expression #binaryExpr
-    | expression op = ('==' | '!=') expression #binaryExpr
-    | expression op = '&' expression #binaryExpr
-    | expression op = '^' expression #binaryExpr
-    | expression op = '|' expression #binaryExpr
-    | expression op = '&&' expression #binaryExpr
-    | expression op = '||' expression #binaryExpr
-    | <assoc=right> expression '=' expression #assignExpr
+    : primary                                                                                   #atomExpr
+    | expression '.' Identifier ('(' expressionList? ')')?                                      #memberExpr
+    | <assoc=right> New creator                                                                 #createExpr
+    | expression '[' expression ']'                                                             #indexExpr
+    | expression '(' expressionList? ')'                                                        #functionExpr
+    | '[' '&' ']' ('(' functionParameterDef ')') '-' '>' suite '(' expressionList ')'           #lambdaExpr
+    | expression suffix = ('++' | '--')                                                         #suffixExpr
+    | <assoc=right> prefix = ('++' | '--' | '!' | '~' | '-' | '+') expression                   #prefixExpr
+    | expression op = ('*' | '/' | '%') expression                                              #binaryExpr
+    | expression op = ('+' | '-') expression                                                    #binaryExpr
+    | expression op = ('<<' | '>>') expression                                                  #binaryExpr
+    | expression op = ('<' | '<=' | '>' | '>=') expression                                      #binaryExpr
+    | expression op = ('==' | '!=') expression                                                  #binaryExpr
+    | expression op = '&' expression                                                            #binaryExpr
+    | expression op = '^' expression                                                            #binaryExpr
+    | expression op = '|' expression                                                            #binaryExpr
+    | expression op = '&&' expression                                                           #binaryExpr
+    | expression op = '||' expression                                                           #binaryExpr
+    | <assoc=right> expression '=' expression                                                   #assignExpr
     ;
 varDef : varType varDeclaration (',' varDeclaration)*;
 varDeclaration : Identifier ('=' expression)?;
