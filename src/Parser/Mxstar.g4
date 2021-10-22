@@ -4,6 +4,7 @@ functionDef : returnType Identifier '(' functionParameterDef ')'suite;
 functionParameterDef : (varType Identifier (',' varType Identifier)* )?;
 expressionList : expression (',' expression)*;
 suite : '{' statement* '}';
+
 statement
     : suite                                                                                     #block
     | declarationStmt                                                                           #varDefStmt
