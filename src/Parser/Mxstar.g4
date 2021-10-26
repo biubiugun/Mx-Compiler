@@ -1,9 +1,11 @@
 grammar Mxstar;
-program: (declarationStmt | functionDef)*;
+program: (declarationStmt | functionDef | classDef | ';')* EOF;
+classDef : Class Identifier '{' (varDef | functionDef)* classConstructDef? (varDef | functionDef)* '}' ';';
 functionDef : returnType Identifier '(' functionParameterDef ')'suite;
 functionParameterDef : (varType Identifier (',' varType Identifier)* )?;
 expressionList : expression (',' expression)*;
 suite : '{' statement* '}';
+classConstructDef : Identifier '(' ')' suite;
 
 statement
     : suite                                                                                     #block
