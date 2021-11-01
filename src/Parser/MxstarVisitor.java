@@ -17,6 +17,12 @@ public interface MxstarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProgram(MxstarParser.ProgramContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MxstarParser#programSection}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitProgramSection(MxstarParser.ProgramSectionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MxstarParser#classDef}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -46,12 +52,6 @@ public interface MxstarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSuite(MxstarParser.SuiteContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MxstarParser#classConstructDef}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitClassConstructDef(MxstarParser.ClassConstructDefContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code block}
 	 * labeled alternative in {@link MxstarParser#statement}.
@@ -236,12 +236,6 @@ public interface MxstarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitVarType(MxstarParser.VarTypeContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MxstarParser#builtinType}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBuiltinType(MxstarParser.BuiltinTypeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MxstarParser#arrayType}.
 	 * @param ctx the parse tree

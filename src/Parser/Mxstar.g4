@@ -1,11 +1,12 @@
 grammar Mxstar;
-program: (declarationStmt | functionDef | classDef | ';')* EOF;
-classDef : Class Identifier '{' (varDef | functionDef)* classConstructDef? (varDef | functionDef)* '}' ';';
-functionDef : returnType Identifier '(' functionParameterDef ')'suite;
-functionParameterDef : (varType Identifier (',' varType Identifier)* )?;
+program: programSection*;
+programSection: declarationStmt | functionDef | classDef | ';';
+classDef : Class Identifier '{' (varDef | functionDef)* '}' ';';
+functionDef : returnType? Identifier '(' functionParameterDef? ')'suite;
+functionParameterDef : (varType Identifier (',' varType Identifier)* );
 expressionList : expression (',' expression)*;
 suite : '{' statement* '}';
-classConstructDef : Identifier '(' ')' suite;
+
 
 statement
     : suite                                                                                     #block
@@ -50,9 +51,8 @@ expression
 varDef : varType varDeclaration (',' varDeclaration)*;
 varDeclaration : Identifier ('=' expression)?;
 returnType: Void | varType ;
-varType : (builtinType | Identifier | arrayType);
-builtinType : Int | Bool | String;
-arrayType : (builtinType | Identifier)('[' ']')+;
+varType : (Int | Bool | String | Identifier | arrayType);
+arrayType : (Int | Bool | String | Identifier)('[' ']')+;
 primary : '(' expression ')' | Identifier | literal | This | NULL;
 //字符串处理
 fragment ESC :
@@ -65,7 +65,7 @@ literal
     | STRING
     ;
 
-init : expression | (returnType varDeclaration);
+init : expression | (varType varDeclaration);
 cond : expression;
 iter : expression;
 

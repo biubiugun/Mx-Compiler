@@ -6,7 +6,7 @@ import Util.position;
 
 public class TypeNode extends ASTNode {
     String typename;
-    public int dim;
+    public int dim = 0;
 
     public TypeNode(position _pos,String _typename){
         super(_pos);

@@ -1,18 +1,19 @@
 package AST.ExprNode;
 
 import AST.ASTVisitor;
+import AST.TypeNode.TypeNode;
 import Util.position;
 import java.util.ArrayList;
 
 public class CreateExprNode extends ExprNode{
-    public String typename;
-    public ArrayList<ExprNode> objList;
+    public TypeNode typename;
+    public ArrayList<ExprNode> exprList;
     public int dim;
 
-    public CreateExprNode(position _pos, String _content, String _typename, ArrayList<ExprNode> _objList,int _dim){
+    public CreateExprNode(position _pos, String _content, TypeNode _typename, ArrayList<ExprNode> _exprList,int _dim){
         super(_pos, _content);
         typename = _typename;
-        objList = _objList;
+        if(_exprList != null)exprList =_exprList;
         dim = _dim;
     }
 

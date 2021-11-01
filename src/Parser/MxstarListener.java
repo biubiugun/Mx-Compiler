@@ -18,6 +18,16 @@ public interface MxstarListener extends ParseTreeListener {
 	 */
 	void exitProgram(MxstarParser.ProgramContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MxstarParser#programSection}.
+	 * @param ctx the parse tree
+	 */
+	void enterProgramSection(MxstarParser.ProgramSectionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MxstarParser#programSection}.
+	 * @param ctx the parse tree
+	 */
+	void exitProgramSection(MxstarParser.ProgramSectionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MxstarParser#classDef}.
 	 * @param ctx the parse tree
 	 */
@@ -67,16 +77,6 @@ public interface MxstarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitSuite(MxstarParser.SuiteContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MxstarParser#classConstructDef}.
-	 * @param ctx the parse tree
-	 */
-	void enterClassConstructDef(MxstarParser.ClassConstructDefContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MxstarParser#classConstructDef}.
-	 * @param ctx the parse tree
-	 */
-	void exitClassConstructDef(MxstarParser.ClassConstructDefContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code block}
 	 * labeled alternative in {@link MxstarParser#statement}.
@@ -391,16 +391,6 @@ public interface MxstarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitVarType(MxstarParser.VarTypeContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MxstarParser#builtinType}.
-	 * @param ctx the parse tree
-	 */
-	void enterBuiltinType(MxstarParser.BuiltinTypeContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MxstarParser#builtinType}.
-	 * @param ctx the parse tree
-	 */
-	void exitBuiltinType(MxstarParser.BuiltinTypeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MxstarParser#arrayType}.
 	 * @param ctx the parse tree

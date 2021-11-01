@@ -2,17 +2,16 @@ package AST.DefNode;
 
 import AST.ASTVisitor;
 import AST.ExprNode.ExprNode;
+import AST.TypeNode.TypeNode;
+import java.util.ArrayList;
 import Util.position;
 
 public class varDefNode extends DefNode{
-    public String name,type;
-    public ExprNode init;
+    public ArrayList<varDeclarationNode> varList;
 
-    public varDefNode(position _pos,String _name,String _type,ExprNode _init){
+    public varDefNode(position _pos,ArrayList<varDeclarationNode> _varList){
         super(_pos);
-        name = _name;
-        type = _type;
-        if(_init != null)init = _init;
+        varList = _varList;
     }
 
     @Override
