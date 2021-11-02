@@ -10,6 +10,7 @@ import AST.TypeNode.ConstNode;
 import AST.TypeNode.TypeNode;
 import Parser.MxstarBaseVisitor;
 import Parser.MxstarParser;
+import Util.error.SyntaxError;
 import Util.position;
 
 import java.util.ArrayList;
@@ -305,7 +306,7 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
             case "--" -> {
                 _op = SuffixExprNode.s_op.SelfMinus;
             }
-            default -> {}
+            default -> throw new RuntimeException("[error]suffix expression's op missed!");
         }
         return new SuffixExprNode(new position(ctx.getStart()),ctx.getText(),_op,(ExprNode) visit(ctx.expression()));
     }
@@ -320,7 +321,7 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
             case "~" -> _op = PrefixExprNode.p_op.Tilde;
             case "-" -> _op = PrefixExprNode.p_op.Minus;
             case "+" -> _op = PrefixExprNode.p_op.Plus;
-            default -> {}
+            default -> throw new RuntimeException("[error]prefix expression's op missed!");
         }
         return new PrefixExprNode(new position(ctx.getStart()),ctx.getText(),_op,(ExprNode) visit(ctx.expression()));
     }
@@ -347,7 +348,7 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
             case "|" -> _op = BinaryExprNode.op.Or;
             case "&&" -> _op = BinaryExprNode.op.AndAnd;
             case "||" -> _op = BinaryExprNode.op.OrOr;
-            default -> {}
+            default -> {throw new RuntimeException("[error]binary expression's op missed!");}
         }
         return new BinaryExprNode(new position(ctx.getStart()),ctx.getText(),(ExprNode) visit(ctx.expression(0)),_op,(ExprNode) visit(ctx.expression(1)));
     }
