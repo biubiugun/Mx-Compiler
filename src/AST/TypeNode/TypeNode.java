@@ -5,7 +5,7 @@ import AST.ASTVisitor;
 import Util.position;
 
 public class TypeNode extends ASTNode {
-    String typename;
+    public String typename;
     public int dim = 0;
 
     public TypeNode(position _pos,String _typename){

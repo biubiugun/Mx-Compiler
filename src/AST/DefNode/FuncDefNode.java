@@ -8,10 +8,10 @@ import Util.position;
 import java.util.ArrayList;
 
 public class FuncDefNode extends DefNode{
-    TypeNode typename;
-    String func_name;
-    ArrayList<varDeclarationNode> paraList;
-    BlockStmtNode stmts;
+    public TypeNode typename;
+    public String func_name;
+    public ArrayList<varDeclarationNode> paraList;
+    public BlockStmtNode stmts;
 
     public FuncDefNode(position _pos,TypeNode _typename,String _func_name,ArrayList<varDeclarationNode>_paraList,BlockStmtNode _stmts){
         super(_pos);

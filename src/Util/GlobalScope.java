@@ -9,7 +9,7 @@ import java.util.Map;
 public class GlobalScope extends Scope{
 
     public Map<String, FuncDefNode> functionTable;
-    public Map<String, ClassDefNode> classTable;
+    public Map<String, GlobalScope> classTable;
 
     public GlobalScope(Scope _parent){
         super(_parent);
@@ -33,7 +33,7 @@ public class GlobalScope extends Scope{
         return classTable.containsKey(className);
     }
 
-    public void setClass(String className,ClassDefNode Class){
+    public void setClass(String className,GlobalScope Class){
         classTable.put(className,Class);
     }
 
