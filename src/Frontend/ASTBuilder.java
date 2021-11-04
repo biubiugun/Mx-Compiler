@@ -17,13 +17,13 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
+
     @Override
     public ASTNode visitProgram(MxstarParser.ProgramContext ctx){
         RootNode root = new RootNode(new position(ctx.getStart()));
-        root.NodeList = new ArrayList<ProgramSectionNode>();
+        root.NodeList = new ArrayList<>();
         for(var it : ctx.programSection()){
-            ProgramSectionNode sectionNode = (ProgramSectionNode)visit(it);
-            root.NodeList.add(sectionNode);
+            root.NodeList.add(visit(it));
         }
         return root;
     }
@@ -220,16 +220,16 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
         if(ctx.primary().expression() != null){
             return (ExprNode) visit(ctx.primary().expression());
         }
-        ConstNode context = new ConstNode(new position(ctx.getStart()),ctx.getText());
+        AtomExprNode context = new AtomExprNode(new position(ctx.getStart()),ctx.getText(),new ConstNode(new position(ctx.getStart()),ctx.getText()));
         if(ctx.primary().literal() != null){
-            if(ctx.primary().literal().DecimalInteger() != null)context.type = ConstNode.constType.DecimalInteger;
-            else if(ctx.primary().literal().True() != null)context.type = ConstNode.constType.True;
-            else if(ctx.primary().literal().False() != null)context.type = ConstNode.constType.False;
-            else context.type = ConstNode.constType.STRING;
+            if(ctx.primary().literal().DecimalInteger() != null)context.constNode.type = ConstNode.constType.DecimalInteger;
+            else if(ctx.primary().literal().True() != null)context.constNode.type = ConstNode.constType.True;
+            else if(ctx.primary().literal().False() != null)context.constNode.type = ConstNode.constType.False;
+            else context.constNode.type = ConstNode.constType.STRING;
         }else{
-            if(ctx.primary().Identifier() != null)context.type = ConstNode.constType.Identifier;
-            else if(ctx.primary().This() != null)context.type = ConstNode.constType.This;
-            else context.type = ConstNode.constType.NULL;
+            if(ctx.primary().Identifier() != null)context.constNode.type = ConstNode.constType.Identifier;
+            else if(ctx.primary().This() != null)context.constNode.type = ConstNode.constType.This;
+            else context.constNode.type = ConstNode.constType.NULL;
         }
         return context;
     }

@@ -6,7 +6,7 @@ import Util.position;
 import java.util.LinkedList;
 
 public class BlockStmtNode extends StmtNode{
-    private LinkedList<StmtNode>stmts;
+    public LinkedList<StmtNode>stmts;
 
     public BlockStmtNode(LinkedList<StmtNode>_stmts,position _pos){
         super(_pos);

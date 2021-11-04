@@ -65,4 +65,6 @@ public interface ASTVisitor {
     void visit(varDeclarationNode it);
 
     void visit(ConstNode it);
+
+    void visit(AtomExprNode it);
 }

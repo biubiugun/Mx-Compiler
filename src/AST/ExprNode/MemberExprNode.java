@@ -11,6 +11,7 @@ public class MemberExprNode extends ExprNode{
         super(_pos,_content);
         member_name = _member_name;
         objExpr = _objExpr;
+        isAssignable = true;
     }
 
     @Override

@@ -10,6 +10,7 @@ public class IndexExprNode extends ExprNode{
         super(_pos,_content);
         objExpr = _objExpr;
         indexExpr = _indexExpr;
+        isAssignable = true;
     }
 
     @Override

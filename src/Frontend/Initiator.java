@@ -41,10 +41,10 @@ public class Initiator implements ASTVisitor{
         initScope.setFunc("toString",toStringFunc);
 
         //builtInClass
-        initScope.setClass("int",new GlobalScope(initScope));
-        initScope.setClass("bool",new GlobalScope(initScope));
+        initScope.setClass("int",new GlobalScope(initScope,"int"));
+        initScope.setClass("bool",new GlobalScope(initScope,"bool"));
 
-        GlobalScope stringClassScope = new GlobalScope(initScope);
+        GlobalScope stringClassScope = new GlobalScope(initScope,"string");
         ArrayList<varDeclarationNode> subStringPara = new ArrayList<>();
         subStringPara.add(new varDeclarationNode(null,"left",null,new TypeNode(null,"int")));
         subStringPara.add(new varDeclarationNode(null,"right",null,new TypeNode(null,"int")));
@@ -86,7 +86,7 @@ public class Initiator implements ASTVisitor{
         else {
             if(initScope.containsFunc(it.class_name))throw new SemanticError("class " + it.class_name + ":duplicate class naming with function!",it.pos);
             else {
-                GlobalScope classScope = new GlobalScope(initScope);
+                GlobalScope classScope = new GlobalScope(initScope,it.class_name);
                 for(var i : it.member){
                     for(var j : i.varList){
                         if(classScope.containsVariable(j.name))throw new SemanticError("class " + it.class_name + ":duplicate class variable name!",it.pos);
@@ -152,4 +152,6 @@ public class Initiator implements ASTVisitor{
     public void visit(varDeclarationNode it) {}
     @Override
     public void visit(ConstNode it) {}
+    @Override
+    public void visit(AtomExprNode it) {}
 }

@@ -6,6 +6,7 @@ import Util.position;
 public abstract class ExprNode extends ASTNode {
     public String content;
     public String type;
+    public boolean isAssignable = false;
 
     public ExprNode(position _pos,String _content){
         super(_pos);

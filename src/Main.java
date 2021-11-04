@@ -37,7 +37,7 @@ public class Main {
 
             ASTBuilder astBuilder = new ASTBuilder();
             RootNode rt = (RootNode) astBuilder.visit(parseTreeRoot);
-            GlobalScope gScope = new GlobalScope(null);
+            GlobalScope gScope = new GlobalScope(null,"Global");
             Initiator initiator = new Initiator(gScope);
             gScope = initiator.initializeBuiltIn();
             initiator.visit(rt);

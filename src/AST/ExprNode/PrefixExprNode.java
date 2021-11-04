@@ -12,6 +12,7 @@ public class PrefixExprNode extends ExprNode{
         super(_pos,_content);
         OP = _OP;
         obj_name = _obj_name;
+        isAssignable = true;
     }
 
     @Override

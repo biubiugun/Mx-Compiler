@@ -5,7 +5,7 @@ import AST.ASTVisitor;
 import Util.position;
 
 public class ConstNode extends ASTNode {
-    String name;
+    public String name;
     public enum constType{
         DecimalInteger,
         True,
@@ -20,6 +20,10 @@ public class ConstNode extends ASTNode {
     public ConstNode(position _pos,String _name){
         super(_pos);
         name = _name;
+    }
+
+    public boolean isAssignable(){
+        return type == constType.This || type == constType.Identifier;
     }
 
     @Override

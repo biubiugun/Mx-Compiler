@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Scope {
-
+    public String name;
     public Map<String, TypeNode> VarTable;
     public Scope parent;
 
-    public Scope(Scope _parent){
+    public Scope(Scope _parent,String _name){
         parent = _parent;
         VarTable = new HashMap<>();
     }

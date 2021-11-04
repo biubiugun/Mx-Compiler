@@ -12,9 +12,39 @@ import AST.StmtNode.*;
 import AST.TypeNode.ConstNode;
 import AST.TypeNode.TypeNode;
 import Util.GlobalScope;
+import Util.Scope;
+import Util.error.SemanticError;
 
 public class SemanticChecker implements ASTVisitor {
     GlobalScope gScope;
+    Scope currentScope;
+    boolean inFunction = false,inClass = false;
+    String inFuncType;
+
+    private String getConstType(ConstNode it){
+        switch (it.type){
+
+            case DecimalInteger -> {
+                return "int";
+            }
+            case True, False -> {
+                return "bool";
+            }
+            case STRING -> {
+                return "string";
+            }
+            case This -> {
+                return "this";
+            }
+            case NULL -> {
+                return "null";
+            }
+            case Identifier -> {
+                return it.name;
+            }
+        }
+            throw new SemanticError("none type fit!",it.pos);
+    }
 
     public SemanticChecker(GlobalScope _gScope){
         gScope = _gScope;
@@ -22,27 +52,34 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit(RootNode it) {
-
+        it.NodeList.forEach(node-> node.accept(this));
     }
 
     @Override
     public void visit(ProgramSectionNode it) {
-
+        it.accept(this);
     }
 
     @Override
     public void visit(BlockStmtNode it) {
-
+        if(it.stmts != null){
+            it.stmts.forEach(stmtNode -> stmtNode.accept(this));
+        }
     }
 
     @Override
     public void visit(ifStmtNode it) {
-
+        it.condition.accept(this);
     }
 
     @Override
     public void visit(ReturnStmtNode it) {
-
+        if(!inFunction)throw new SemanticError("not in function but return!",it.pos);
+        it.expr.accept(this);
+        String check_type = it.expr.type;
+        if(check_type != null && !inFuncType.equals(check_type)){
+            throw new SemanticError("returnType is not proper",it.pos);
+        }
     }
 
     @Override
@@ -149,6 +186,9 @@ public class SemanticChecker implements ASTVisitor {
     public void visit(varDeclarationNode it) {
 
     }
+
+    @Override
+    public void visit(AtomExprNode it){}
 
     @Override
     public void visit(ConstNode it) {
