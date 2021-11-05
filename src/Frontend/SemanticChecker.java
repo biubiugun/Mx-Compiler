@@ -298,7 +298,7 @@ public class SemanticChecker implements ASTVisitor {
     public void visit(SuffixExprNode it) {
         it.obj_name.accept(this);
         if(!it.obj_name.isAssignable)throw new SemanticError("object could not be assigned",it.pos);
-        if(it.obj_name.type != INT_TYPE)throw new SemanticError("object's type isn't integer for suffix.",it.pos);
+        if(!it.obj_name.type.Equals(INT_TYPE))throw new SemanticError("object's type isn't integer for suffix.",it.pos);
         it.type = INT_TYPE;
     }
 
@@ -310,7 +310,7 @@ public class SemanticChecker implements ASTVisitor {
         }
         switch (it.OP){
             case SelfPlus,SelfMinus,Tilde,Plus,Minus -> {
-                if(it.obj_name.type != INT_TYPE)throw new SemanticError("object's type isn't integer for prefix.",it.pos);
+                if(!it.obj_name.type.Equals(INT_TYPE))throw new SemanticError("object's type isn't integer for prefix.",it.pos);
                 it.type = INT_TYPE;
             }
             case Not -> {
@@ -346,11 +346,11 @@ public class SemanticChecker implements ASTVisitor {
                 it.type = INT_TYPE;
             }
             case Less,Greater,LessEqual,GreaterEqual -> {
-                if(!it.lExpr.type.Equals(INT_TYPE) || !it.lExpr.type.Equals(STRING_TYPE))throw new SemanticError("type is not int or string",it.pos);
+                if(!it.lExpr.type.Equals(INT_TYPE) && !it.lExpr.type.Equals(STRING_TYPE))throw new SemanticError("type is not int or string",it.pos);
                 it.type = BOOL_TYPE;
             }
             case Plus -> {
-                if(!it.lExpr.type.Equals(INT_TYPE) || !it.lExpr.type.Equals(STRING_TYPE))throw new SemanticError("type is not int or string",it.pos);
+                if(!it.lExpr.type.Equals(INT_TYPE) && !it.lExpr.type.Equals(STRING_TYPE))throw new SemanticError("type is not int or string",it.pos);
                 it.type = it.lExpr.type;
             }
             case AndAnd,OrOr->{

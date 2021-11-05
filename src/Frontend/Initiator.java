@@ -23,13 +23,13 @@ public class Initiator implements ASTVisitor{
         initScope.setFunc("print",printFunc);
 
         FuncDefNode printInFunc = new FuncDefNode(null,new TypeNode(null,"void"),"printIn",null,null);
-        initScope.setFunc("printIn",printInFunc);
+        initScope.setFunc("println",printInFunc);
 
         FuncDefNode printIntFunc = new FuncDefNode(null,new TypeNode(null,"void"),"printInt",null,null);
         initScope.setFunc("printInt",printIntFunc);
 
         FuncDefNode printInIntFunc = new FuncDefNode(null,new TypeNode(null,"void"),"printInInt",null,null);
-        initScope.setFunc("printInInt",printInIntFunc);
+        initScope.setFunc("printlnInt",printInIntFunc);
 
         FuncDefNode getStringFunc = new FuncDefNode(null,new TypeNode(null,"string"),"getString",null,null);
         initScope.setFunc("getString",getStringFunc);
