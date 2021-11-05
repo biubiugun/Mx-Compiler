@@ -314,7 +314,7 @@ public class SemanticChecker implements ASTVisitor {
                 it.type = INT_TYPE;
             }
             case Not -> {
-                if(it.obj_name.type != BOOL_TYPE)throw new SemanticError("object's type isn't bool for prefix.",it.pos);
+                if(!it.obj_name.type.Equals(BOOL_TYPE))throw new SemanticError("object's type isn't bool for prefix.",it.pos);
                 it.type = BOOL_TYPE;
             }
             case ERROR -> {
@@ -434,6 +434,7 @@ public class SemanticChecker implements ASTVisitor {
         if(it.constNode.type == ConstNode.constType.Identifier){
             if(currentScope.containsVariable(it.constNode.name)){
                 it.type.typename = currentScope.getVarType(it.constNode.name).typename;
+                it.type.dim = currentScope.getVarType(it.constNode.name).dim;
             }else{
                 Scope nowScope = currentScope;
                 boolean isFound = false;
@@ -441,6 +442,7 @@ public class SemanticChecker implements ASTVisitor {
                     nowScope = nowScope.parent;
                     if(nowScope.containsVariable(it.constNode.name)){
                         it.type.typename = nowScope.getVarType(it.constNode.name).typename;
+                        it.type.dim =  nowScope.getVarType(it.constNode.name).dim;
                         isFound = true;
                         break;
                     }

@@ -83,10 +83,18 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
     @Override
     public ASTNode visitArrayType(MxstarParser.ArrayTypeContext ctx){
         int dim = 0;
+        StringBuilder type_name = new StringBuilder();
+        boolean type_collected = false;
         for(var it : ctx.children){
-            if(it.getText().equals("["))dim++;
+            if(it.getText().equals("[")) {
+                dim++;
+                type_collected = true;
+            }
+            if(!type_collected) {
+                type_name.append(it.getText());
+            }
         }
-        TypeNode arrayType = new TypeNode(new position(ctx.getStart()),ctx.getText());
+        TypeNode arrayType = new TypeNode(new position(ctx.getStart()),type_name.toString());
         arrayType.dim = dim;
         return arrayType;
     }
@@ -239,10 +247,10 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
 
     @Override
     public ASTNode visitMemberExpr(MxstarParser.MemberExprContext ctx){
-        if(ctx.LeftParen() != null){
+        if(ctx.LeftParen() == null){
             return new MemberExprNode(new position(ctx.getStart()),ctx.getText(),ctx.Identifier().getText(),(ExprNode) visit(ctx.expression()));
         }else{
-            ArrayList<ExprNode> exprList = new ArrayList<ExprNode>();
+            ArrayList<ExprNode> exprList = new ArrayList<>();
             if(ctx.expressionList() != null){
                 for (var it : ctx.expressionList().expression()) {
                     exprList.add((ExprNode) visit(it));
@@ -263,7 +271,10 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
         for(var it : ctx.expression()){
             exprList.add((ExprNode) visit(it));
         }
-        return new CreateExprNode(new position(ctx.getStart()),"New " + ctx.getText(),(TypeNode) visit(ctx.returnType()),exprList,exprList.size());
+        int dim = ctx.LeftBracket().size();
+        TypeNode type = (TypeNode) visit(ctx.returnType());
+        type.dim = dim;
+        return new CreateExprNode(new position(ctx.getStart()),"New " + ctx.getText(),type,exprList,exprList.size());
     }
 
     @Override
