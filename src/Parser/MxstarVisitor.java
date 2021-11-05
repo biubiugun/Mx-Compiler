@@ -123,12 +123,6 @@ public interface MxstarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitEmptyStmt(MxstarParser.EmptyStmtContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MxstarParser#declarationStmt}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDeclarationStmt(MxstarParser.DeclarationStmtContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code arrayCreator}
 	 * labeled alternative in {@link MxstarParser#creator}.
 	 * @param ctx the parse tree

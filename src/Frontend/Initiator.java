@@ -61,8 +61,8 @@ public class Initiator implements ASTVisitor{
 
     @Override
     public void visit(RootNode it) {
-        it.NodeList.forEach(node->node.accept(this));
-        if(!initScope.containsClass("main"))
+        if(it.NodeList != null)it.NodeList.forEach(node->node.accept(this));
+        if(!initScope.containsFunc("main"))
             throw new SemanticError("main function lost!",it.pos);
         else {
             if (!initScope.getFunc("main").typename.typename.equals("int"))

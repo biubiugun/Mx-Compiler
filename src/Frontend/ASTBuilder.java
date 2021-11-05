@@ -35,7 +35,9 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
         }else if(ctx.functionDef() != null){
             return visit(ctx.functionDef());
         }else{
-            return visit(ctx.declarationStmt());
+            if(ctx.statement() instanceof MxstarParser.VarDefStmtContext) {
+                return visit(ctx.statement());
+            }else throw new SyntaxError("statement is not to define variable.",new position(ctx.getStart()));
         }
     }
 
@@ -131,7 +133,7 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
 
     @Override
     public ASTNode visitVarDefStmt(MxstarParser.VarDefStmtContext ctx){
-        return new varDefStmtNode(new position(ctx.getStart()),(varDefNode) visit(ctx.declarationStmt().varDef()));
+        return new varDefStmtNode(new position(ctx.getStart()),(varDefNode) visit(ctx.varDef()));
     }
 
     @Override

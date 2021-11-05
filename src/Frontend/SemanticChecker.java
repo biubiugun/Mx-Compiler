@@ -59,6 +59,7 @@ public class SemanticChecker implements ASTVisitor {
 
     public SemanticChecker(GlobalScope _gScope){
         gScope = _gScope;
+        currentScope = gScope;
     }
 
     @Override
@@ -170,7 +171,9 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit(varDefStmtNode it) {
-        if(it.varDef != null)it.varDef.accept(this);
+        if(it.varDef != null) {
+            it.varDef.accept(this);
+        }
     }
 
     @Override
@@ -385,6 +388,7 @@ public class SemanticChecker implements ASTVisitor {
     public void visit(ClassDefNode it) {
         currentScope = new Scope(currentScope);
         inClass = true;
+        currentClass = it;
         if(it.member != null){
             it.member.forEach(varDefNode -> {
                 if(varDefNode.varList != null){
@@ -396,6 +400,7 @@ public class SemanticChecker implements ASTVisitor {
             it.memberFunc.forEach(funcDefNode -> funcDefNode.accept(this));
         }
         inClass = false;
+        currentClass = null;
         currentScope = currentScope.parent;
     }
 
@@ -434,8 +439,8 @@ public class SemanticChecker implements ASTVisitor {
                 boolean isFound = false;
                 while(nowScope.parent != null){
                     nowScope = nowScope.parent;
-                    if(currentScope.containsVariable(it.constNode.name)){
-                        it.type.typename = currentScope.getVarType(it.constNode.name).typename;
+                    if(nowScope.containsVariable(it.constNode.name)){
+                        it.type.typename = nowScope.getVarType(it.constNode.name).typename;
                         isFound = true;
                         break;
                     }

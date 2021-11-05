@@ -1,6 +1,6 @@
 grammar Mxstar;
 program: programSection*;
-programSection: declarationStmt | functionDef | classDef | ';';
+programSection: statement | functionDef | classDef | ';';
 classDef : Class Identifier '{' (varDef | functionDef)* '}' ';';
 functionDef : returnType? Identifier '(' functionParameterDef? ')'suite;
 functionParameterDef : (varType Identifier (',' varType Identifier)* );
@@ -10,7 +10,7 @@ suite : '{' statement* '}';
 
 statement
     : suite                                                                                     #block
-    | declarationStmt                                                                           #varDefStmt
+    | varDef ';'                                                                                #varDefStmt
     | If '(' expression ')' trueStmt=statement
       (Else falseStmt=statement)?                                                               #ifStmt
     | Return expression? ';'                                                                    #returnStmt
@@ -21,7 +21,7 @@ statement
     | expression ';'                                                                            #pureExprStmt
     | ';'                                                                                       #emptyStmt
     ;
-declarationStmt : varDef ';';
+
 
 creator
     : returnType ('[' expression ']')+ ('[' ']')*                                               #arrayCreator
