@@ -90,13 +90,14 @@ public class Initiator implements ASTVisitor{
                 GlobalScope classScope = new GlobalScope(initScope);
                 for(var i : it.member){
                     for(var j : i.varList){
+
                         if(classScope.containsVariable(j.name))throw new SemanticError("class " + it.class_name + ":duplicate class variable name!",it.pos);
                         else classScope.SetVariable(j.name,j.type);
                     }
                 }
                 for(var i : it.memberFunc){
                     if(i.typename == null && !i.func_name.equals(it.class_name))throw new SemanticError("class " + it.class_name + ":function return failed!",it.pos);
-                    if(i.typename != null && i.func_name.equals(it.class_name))throw new SemanticError("class " + it.class_name + ":construct function shouldn't have return type",it.pos);
+                    if(i.hasReturnStmt && i.func_name.equals(it.class_name))throw new SemanticError("class " + it.class_name + ":construct function shouldn't have return type",it.pos);
                     if(classScope.containsFunc(i.func_name))throw new SemanticError("class " + it.class_name + ":duplicate class function name!",it.pos);
                     else classScope.setFunc(i.func_name,i);
                 }

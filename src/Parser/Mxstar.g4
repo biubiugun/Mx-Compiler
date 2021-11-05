@@ -10,7 +10,7 @@ suite : '{' statement* '}';
 
 statement
     : suite                                                                                     #block
-    | varDef ';'                                                                                #varDefStmt
+    | varDef                                                                                 #varDefStmt
     | If '(' expression ')' trueStmt=statement
       (Else falseStmt=statement)?                                                               #ifStmt
     | Return expression? ';'                                                                    #returnStmt
@@ -49,7 +49,7 @@ expression
     | expression op = '||' expression                                                           #binaryExpr
     | <assoc=right> expression '=' expression                                                   #assignExpr
     ;
-varDef : varType varDeclaration (',' varDeclaration)*;
+varDef : varType varDeclaration (',' varDeclaration)* ';';
 varDeclaration : Identifier ('=' expression)?;
 returnType: Void | varType ;
 varType : (Int | Bool | String | Identifier | arrayType);

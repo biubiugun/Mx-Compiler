@@ -159,8 +159,11 @@ public class SemanticChecker implements ASTVisitor {
                 throw new SemanticError("for condition cannot be judged!", it.pos);
         }
         if(it.iter != null)it.iter.accept(this);
-        if(it.thenStmt instanceof BlockStmtNode)((BlockStmtNode) it.thenStmt).stmts.forEach(stmtNode -> stmtNode.accept(this));
-        else it.thenStmt.accept(this);
+        if(it.thenStmt != null){
+            if (it.thenStmt instanceof BlockStmtNode)
+                ((BlockStmtNode) it.thenStmt).stmts.forEach(stmtNode -> stmtNode.accept(this));
+            else it.thenStmt.accept(this);
+        }
         currentScope = currentScope.parent;
         inLoop = false;
     }
@@ -264,8 +267,9 @@ public class SemanticChecker implements ASTVisitor {
         //the func_name has to be an identifier.
         if(inClass){
             GlobalScope nowClassScope = gScope.classTable.get(currentClass.class_name);
-            if(!nowClassScope.containsFunc(it.func_name.content))throw new SemanticError("the function was not found!",it.pos);
-            it.type = nowClassScope.getFunc(it.func_name.content).typename;
+            if(!nowClassScope.containsFunc(it.func_name.content) && !gScope.containsFunc(it.func_name.content))throw new SemanticError("the function was not found!",it.pos);
+            if(nowClassScope.containsFunc(it.func_name.content))it.type = nowClassScope.getFunc(it.func_name.content).typename;
+            else it.type = gScope.getFunc(it.func_name.content).typename;
         }
         else{
             if(!gScope.containsFunc(it.func_name.content))throw new SemanticError("the function was not found!",it.pos);
@@ -370,7 +374,7 @@ public class SemanticChecker implements ASTVisitor {
         currentScope = new Scope(currentScope);
         inFunction = true;
         currentFunction = it;
-        if(it.typename != null && !it.typename.Equals(VOID_TYPE) && !gScope.containsClass(it.typename.typename))
+        if(it.typename.typename != null && !it.typename.Equals(VOID_TYPE) && !gScope.containsClass(it.typename.typename))
             throw new SemanticError("no class for return type!", it.pos);
         if(it.paraList != null){
             it.paraList.forEach(para-> para.accept(this));
@@ -378,7 +382,7 @@ public class SemanticChecker implements ASTVisitor {
         if(it.stmts.stmts != null){
             it.stmts.stmts.forEach(stmtNode -> stmtNode.accept(this));
         }
-        if(it.typename != null && !it.typename.Equals(VOID_TYPE) && !it.hasReturnStmt && !it.func_name.equals("main"))
+        if(it.typename.typename != null && !it.typename.Equals(VOID_TYPE) && !it.hasReturnStmt && !it.func_name.equals("main"))
             throw new SemanticError("the function needs return value!",it.pos);
         inFunction = false;
         currentFunction = null;
@@ -387,7 +391,7 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit(ClassDefNode it) {
-        currentScope = new Scope(currentScope);
+        currentScope = gScope.classTable.get(it.class_name);
         inClass = true;
         currentClass = it;
         if(it.member != null){

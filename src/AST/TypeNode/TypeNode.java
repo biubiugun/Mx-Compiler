@@ -22,6 +22,8 @@ public class TypeNode extends ASTNode {
     }
 
     public boolean Equals(TypeNode other){
+        if(other.typename == null && typename == null)return true;
+        if(other.typename == null || typename == null)return false;
         return typename.equals(other.typename) && dim == other.dim ||
                 (typename.equals(other.typename) && typename.equals("null"));
     }

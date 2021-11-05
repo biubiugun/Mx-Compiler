@@ -109,7 +109,7 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
             if(ctx.returnType().Void() == null)type = (TypeNode) visit(ctx.returnType());
             else type = new TypeNode(new position(ctx.returnType().getStart()),"void");
         }else{
-            type = new TypeNode(new position(ctx.getStart()),ctx.Identifier().getText());
+            type = new TypeNode(new position(ctx.getStart()),null);
         }
         if(ctx.functionParameterDef() != null){
             paraList = new ArrayList<varDeclarationNode>();
