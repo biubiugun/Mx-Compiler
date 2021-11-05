@@ -31,11 +31,11 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
     @Override
     public ASTNode visitProgramSection(MxstarParser.ProgramSectionContext ctx){
         if(ctx.classDef() != null){
-            return (ClassDefNode)visit(ctx.classDef());
+            return visit(ctx.classDef());
         }else if(ctx.functionDef() != null){
-            return (FuncDefNode)visit(ctx.functionDef());
+            return visit(ctx.functionDef());
         }else{
-            return (varDefStmtNode)visit(ctx.declarationStmt());
+            return visit(ctx.declarationStmt());
         }
     }
 
@@ -131,7 +131,7 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
 
     @Override
     public ASTNode visitVarDefStmt(MxstarParser.VarDefStmtContext ctx){
-        return (varDefStmtNode)visit(ctx.declarationStmt().varDef());
+        return new varDefStmtNode(new position(ctx.getStart()),(varDefNode) visit(ctx.declarationStmt().varDef()));
     }
 
     @Override
