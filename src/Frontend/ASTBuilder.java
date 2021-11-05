@@ -163,15 +163,16 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
     @Override
     public ASTNode visitForStmt(MxstarParser.ForStmtContext ctx){
         ExprNode cond,iter;
+        StmtNode thenStmt = (StmtNode) visit(ctx.statement());
         if(ctx.init() == null){
             if(ctx.cond() != null){
                 cond = (ExprNode) visit(ctx.cond().expression());
                 if(ctx.init() != null) {
                     iter = (ExprNode) visit(ctx.iter().expression());
-                    return new ForStmtNode(new position(ctx.getStart()), (ExprNode) null,cond,iter);
+                    return new ForStmtNode(new position(ctx.getStart()), (ExprNode) null,cond,iter,thenStmt);
                 }
-                else return new ForStmtNode(new position(ctx.getStart()), (ExprNode) null,cond,null);
-            }else return new ForStmtNode(new position(ctx.getStart()), (ExprNode) null,null,null);
+                else return new ForStmtNode(new position(ctx.getStart()), (ExprNode) null,cond,null,thenStmt);
+            }else return new ForStmtNode(new position(ctx.getStart()), (ExprNode) null,null,null,thenStmt);
         }
         if(ctx.init().varType() != null){
             varDeclarationNode init;
@@ -183,20 +184,20 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
                 cond = (ExprNode) visit(ctx.cond().expression());
                 if(ctx.init() != null) {
                     iter = (ExprNode) visit(ctx.iter().expression());
-                    return new ForStmtNode(new position(ctx.getStart()),init,cond,iter);
+                    return new ForStmtNode(new position(ctx.getStart()),init,cond,iter,thenStmt);
                 }
-                else return new ForStmtNode(new position(ctx.getStart()), init,cond,null);
-            }else return new ForStmtNode(new position(ctx.getStart()), init,null,null);
+                else return new ForStmtNode(new position(ctx.getStart()), init,cond,null,thenStmt);
+            }else return new ForStmtNode(new position(ctx.getStart()), init,null,null,thenStmt);
         }else{
             ExprNode init = (ExprNode) visit(ctx.init().expression());
             if(ctx.cond() != null){
                 cond = (ExprNode) visit(ctx.cond().expression());
                 if(ctx.init() != null) {
                     iter = (ExprNode) visit(ctx.iter().expression());
-                    return new ForStmtNode(new position(ctx.getStart()), init,cond,iter);
+                    return new ForStmtNode(new position(ctx.getStart()), init,cond,iter,thenStmt);
                 }
-                else return new ForStmtNode(new position(ctx.getStart()), init,cond,null);
-            }else return new ForStmtNode(new position(ctx.getStart()), init,null,null);
+                else return new ForStmtNode(new position(ctx.getStart()), init,cond,null,thenStmt);
+            }else return new ForStmtNode(new position(ctx.getStart()), init,null,null,thenStmt);
         }
     }
 
@@ -236,13 +237,15 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
 
     @Override
     public ASTNode visitMemberExpr(MxstarParser.MemberExprContext ctx){
-        if(ctx.expressionList() == null){
+        if(ctx.LeftParen() != null){
             return new MemberExprNode(new position(ctx.getStart()),ctx.getText(),ctx.Identifier().getText(),(ExprNode) visit(ctx.expression()));
         }else{
             ArrayList<ExprNode> exprList = new ArrayList<ExprNode>();
-            for (var it : ctx.expressionList().expression()){
-                exprList.add((ExprNode) visit(it));
-            }
+            if(ctx.expressionList() != null){
+                for (var it : ctx.expressionList().expression()) {
+                    exprList.add((ExprNode) visit(it));
+                }
+            }else exprList = null;
             return new MemberFuncExprNode(new position(ctx.getStart()),ctx.getText(),(ExprNode) visit(ctx.expression()),ctx.Identifier().getText(),exprList);
         }
     }
@@ -286,14 +289,19 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
     @Override
     public ASTNode visitLambdaExpr(MxstarParser.LambdaExprContext ctx){
         ArrayList<varDeclarationNode>varList = new ArrayList<>();
-        for(int i = 0;i < ctx.functionParameterDef().varType().size(); ++i){
-            varList.add(new varDeclarationNode(new position(ctx.functionParameterDef().varType(i).getStart()),ctx.functionParameterDef().Identifier(i).getText(),null,(TypeNode) visit(ctx.functionParameterDef().varType(i))));
-        }
+        if(ctx.functionParameterDef() != null){
+            for (int i = 0; i < ctx.functionParameterDef().varType().size(); ++i) {
+                varList.add(new varDeclarationNode(new position(ctx.functionParameterDef().varType(i).getStart()), ctx.functionParameterDef().Identifier(i).getText(), null, (TypeNode) visit(ctx.functionParameterDef().varType(i))));
+            }
+        }else varList = null;
         ArrayList<ExprNode> exprList = new ArrayList<>();
-        for(var it : ctx.expressionList().expression()){
-            exprList.add((ExprNode) visit(it));
-        }
-        return new LambdaExprNode(new position(ctx.getStart()),ctx.getText(),varList,exprList);
+        if(ctx.expressionList() != null){
+            for (var it : ctx.expressionList().expression()) {
+                exprList.add((ExprNode) visit(it));
+            }
+        }else exprList = null;
+        if(!(ctx.statement() instanceof MxstarParser.BlockContext))throw new SyntaxError("wrong lambda expression!",new position(ctx.getStart()));
+        return new LambdaExprNode(new position(ctx.getStart()),ctx.getText(),varList,exprList,(StmtNode) visit(ctx.statement()));
     }
 
     @Override
