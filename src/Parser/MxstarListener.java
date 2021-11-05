@@ -198,6 +198,18 @@ public interface MxstarListener extends ParseTreeListener {
 	 */
 	void exitEmptyStmt(MxstarParser.EmptyStmtContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code errorCreator}
+	 * labeled alternative in {@link MxstarParser#creator}.
+	 * @param ctx the parse tree
+	 */
+	void enterErrorCreator(MxstarParser.ErrorCreatorContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code errorCreator}
+	 * labeled alternative in {@link MxstarParser#creator}.
+	 * @param ctx the parse tree
+	 */
+	void exitErrorCreator(MxstarParser.ErrorCreatorContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code arrayCreator}
 	 * labeled alternative in {@link MxstarParser#creator}.
 	 * @param ctx the parse tree

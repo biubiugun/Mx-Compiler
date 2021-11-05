@@ -106,7 +106,8 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
         suite = (BlockStmtNode) visit(ctx.suite());
         TypeNode type;
         if(ctx.returnType() != null){
-            type = (TypeNode) visit(ctx.returnType());
+            if(ctx.returnType().Void() == null)type = (TypeNode) visit(ctx.returnType());
+            else type = new TypeNode(new position(ctx.returnType().getStart()),"void");
         }else{
             type = new TypeNode(new position(ctx.getStart()),ctx.Identifier().getText());
         }
@@ -280,6 +281,11 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
     @Override
     public ASTNode visitObjectCreator(MxstarParser.ObjectCreatorContext ctx){
         return new CreateExprNode(new position(ctx.getStart()),ctx.getText(),(TypeNode) visit(ctx.returnType()),null,0);
+    }
+
+    @Override
+    public ASTNode visitErrorCreator(MxstarParser.ErrorCreatorContext ctx){
+        throw new SyntaxError("wrong creator!",new position(ctx.getStart()));
     }
 
     @Override

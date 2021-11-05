@@ -24,7 +24,8 @@ statement
 
 
 creator
-    : returnType ('[' expression ']')+ ('[' ']')*                                               #arrayCreator
+    : returnType ('[' expression ']')+ ('[' ']')+ ('[' expression ']')+                          #errorCreator
+    | returnType ('[' expression ']')+ ('[' ']')*                                               #arrayCreator
     | returnType ('('')')?                                                                      #objectCreator
     ;
 expression

@@ -160,6 +160,7 @@ public class SemanticChecker implements ASTVisitor {
         }
         if(it.iter != null)it.iter.accept(this);
         if(it.thenStmt instanceof BlockStmtNode)((BlockStmtNode) it.thenStmt).stmts.forEach(stmtNode -> stmtNode.accept(this));
+        else it.thenStmt.accept(this);
         currentScope = currentScope.parent;
         inLoop = false;
     }
