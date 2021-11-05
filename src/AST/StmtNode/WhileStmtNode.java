@@ -5,8 +5,8 @@ import AST.ExprNode.ExprNode;
 import Util.position;
 
 public class WhileStmtNode extends StmtNode{
-    ExprNode condition;
-    StmtNode thenStmt;
+    public ExprNode condition;
+    public StmtNode thenStmt;
 
     public WhileStmtNode(position _pos,ExprNode _condition,StmtNode _thenStmt){
         super(_pos);

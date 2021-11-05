@@ -33,7 +33,7 @@ expression
     | <assoc=right> New creator                                                                 #createExpr
     | expression '[' expression ']'                                                             #indexExpr
     | expression '(' expressionList? ')'                                                        #functionExpr
-    | '[' '&' ']' ('(' functionParameterDef ')') '-' '>' suite '(' expressionList ')'           #lambdaExpr
+    | '[' '&' ']' ('(' functionParameterDef? ')') '-' '>' statement ('(' expressionList? ')')?           #lambdaExpr
     | expression suffix = ('++' | '--')                                                         #suffixExpr
     | <assoc=right> prefix = ('++' | '--' | '!' | '~' | '-' | '+') expression                   #prefixExpr
     | expression op = ('*' | '/' | '%') expression                                              #binaryExpr

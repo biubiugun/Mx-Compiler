@@ -5,8 +5,8 @@ import Util.position;
 import java.util.ArrayList;
 
 public class FunctionExprNode extends ExprNode{
-    ExprNode func_name;
-    ArrayList<ExprNode> paraList;
+    public ExprNode func_name;
+    public ArrayList<ExprNode> paraList;
 
     public FunctionExprNode(position _pos,String _content,ExprNode _func_name,ArrayList<ExprNode>_paraList){
         super(_pos,_content);

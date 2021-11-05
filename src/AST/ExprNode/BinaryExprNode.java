@@ -15,7 +15,7 @@ public class BinaryExprNode extends ExprNode{
     }
 
     public op OP;
-    ExprNode lExpr,rExpr;
+    public ExprNode lExpr,rExpr;
 
     public BinaryExprNode(position _pos,String _content,ExprNode _lExpr,op _OP,ExprNode _rExpr){
         super(_pos,_content);

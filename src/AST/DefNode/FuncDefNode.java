@@ -12,6 +12,7 @@ public class FuncDefNode extends DefNode{
     public String func_name;
     public ArrayList<varDeclarationNode> paraList;
     public BlockStmtNode stmts;
+    public boolean hasReturnStmt = false;
 
     public FuncDefNode(position _pos,TypeNode _typename,String _func_name,ArrayList<varDeclarationNode>_paraList,BlockStmtNode _stmts){
         super(_pos);

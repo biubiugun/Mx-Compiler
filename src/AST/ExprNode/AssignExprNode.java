@@ -4,7 +4,7 @@ import AST.ASTVisitor;
 import Util.position;
 
 public class AssignExprNode extends ExprNode{
-    ExprNode lExpr,rExpr;
+    public ExprNode lExpr,rExpr;
 
     public AssignExprNode(position _pos, String _content,ExprNode _lExpr, ExprNode _rExpr){
         super(_pos,_content);

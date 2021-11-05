@@ -21,6 +21,11 @@ public class TypeNode extends ASTNode {
         return dim;
     }
 
+    public boolean Equals(TypeNode other){
+        return typename.equals(other.typename) && dim == other.dim ||
+                (typename.equals(other.typename) && typename.equals("null"));
+    }
+
     @Override
     public void accept(ASTVisitor visitor){
         visitor.visit(this);

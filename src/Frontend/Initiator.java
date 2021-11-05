@@ -41,10 +41,10 @@ public class Initiator implements ASTVisitor{
         initScope.setFunc("toString",toStringFunc);
 
         //builtInClass
-        initScope.setClass("int",new GlobalScope(initScope,"int"));
-        initScope.setClass("bool",new GlobalScope(initScope,"bool"));
+        initScope.setClass("int",new GlobalScope(initScope));
+        initScope.setClass("bool",new GlobalScope(initScope));
 
-        GlobalScope stringClassScope = new GlobalScope(initScope,"string");
+        GlobalScope stringClassScope = new GlobalScope(initScope);
         ArrayList<varDeclarationNode> subStringPara = new ArrayList<>();
         subStringPara.add(new varDeclarationNode(null,"left",null,new TypeNode(null,"int")));
         subStringPara.add(new varDeclarationNode(null,"right",null,new TypeNode(null,"int")));
@@ -77,6 +77,7 @@ public class Initiator implements ASTVisitor{
         if(initScope.containsFunc(it.func_name))throw new SemanticError("class " + it.func_name + ":duplicate function definition!",it.pos);
         else{
             if(initScope.containsClass(it.func_name))throw new SemanticError("class " + it.func_name + ":duplicate function naming with class!",it.pos);
+            else if(it.typename == null) {throw new SemanticError("Construct function without a class!",it.pos);}
             else initScope.setFunc(it.func_name,it);
         }
     }
@@ -86,7 +87,7 @@ public class Initiator implements ASTVisitor{
         else {
             if(initScope.containsFunc(it.class_name))throw new SemanticError("class " + it.class_name + ":duplicate class naming with function!",it.pos);
             else {
-                GlobalScope classScope = new GlobalScope(initScope,it.class_name);
+                GlobalScope classScope = new GlobalScope(initScope);
                 for(var i : it.member){
                     for(var j : i.varList){
                         if(classScope.containsVariable(j.name))throw new SemanticError("class " + it.class_name + ":duplicate class variable name!",it.pos);
