@@ -96,7 +96,7 @@ public class Initiator implements ASTVisitor{
                     }
                 }
                 for(var i : it.memberFunc){
-                    if(i.typename == null && !i.func_name.equals(it.class_name))throw new SemanticError("class " + it.class_name + ":function return failed!",it.pos);
+                    if(i.typename.typename == null && !i.func_name.equals(it.class_name))throw new SemanticError("class " + it.class_name + ":function return failed!",it.pos);
                     if(i.hasReturnStmt && i.func_name.equals(it.class_name))throw new SemanticError("class " + it.class_name + ":construct function shouldn't have return type",it.pos);
                     if(classScope.containsFunc(i.func_name))throw new SemanticError("class " + it.class_name + ":duplicate class function name!",it.pos);
                     else classScope.setFunc(i.func_name,i);

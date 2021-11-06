@@ -131,12 +131,12 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
 
     @Override
     public ASTNode visitSuite(MxstarParser.SuiteContext ctx){
-        LinkedList<StmtNode>stmts = new LinkedList<StmtNode>();
+        ArrayList<StmtNode>stmts = new ArrayList<>();
         if(ctx.statement() != null){
             for(var it : ctx.statement()){
                 stmts.add((StmtNode) visit(it));
             }
-        }
+        }else stmts = null;
         return new BlockStmtNode(stmts,new position(ctx.getStart()));
     }
 

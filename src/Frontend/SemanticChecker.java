@@ -76,7 +76,9 @@ public class SemanticChecker implements ASTVisitor {
     public void visit(BlockStmtNode it) {
         currentScope = new Scope(currentScope);
         if(it.stmts != null){
-            it.stmts.forEach(stmtNode -> stmtNode.accept(this));
+            for(var i : it.stmts){
+                if(i != null)i.accept(this);
+            }
         }
         currentScope = currentScope.parent;
     }
@@ -103,8 +105,8 @@ public class SemanticChecker implements ASTVisitor {
         if(!inFunction && !inLambda)throw new SemanticError("not in function or Lambda but return!",it.pos);
         if(inFunction){
             if (it.expr == null) {
-                if (!currentFunction.typename.Equals(VOID_TYPE)) {
-                    throw new SemanticError("only void function can return nothing!", it.pos);
+                if (!currentFunction.typename.Equals(VOID_TYPE) && currentFunction.typename.typename != null) {
+                    throw new SemanticError("only void and construct function can return nothing!", it.pos);
                 }
             } else {
                 it.expr.accept(this);
@@ -203,7 +205,7 @@ public class SemanticChecker implements ASTVisitor {
             GlobalScope tmp_class = gScope.classTable.get(it.objExpr.type.typename);
             if(!tmp_class.containsVariable(it.member_name))throw new SemanticError("the class has no such member!",it.pos);
             else{
-                it.type.typename = tmp_class.getVarType(it.member_name).typename;
+                it.type = tmp_class.getVarType(it.member_name);
                 it.isAssignable = true;
             }
         }
@@ -217,15 +219,20 @@ public class SemanticChecker implements ASTVisitor {
         if(!gScope.containsClass(it.objExpr.type.typename))throw new SemanticError("the class doesn't exist!",it.pos);
         else{
             GlobalScope tmp_class = gScope.classTable.get(it.objExpr.type.typename);
-            if(!tmp_class.containsFunc(it.Func_name))throw new SemanticError("the class has no such member!",it.pos);
+            if(!tmp_class.containsFunc(it.Func_name) && !(it.objExpr.type.dim > 0 && it.Func_name.equals("size")))throw new SemanticError("the class has no such member!",it.pos);
             else{
-                FuncDefNode tmp_func = tmp_class.getFunc(it.Func_name);
-                it.type.typename = tmp_func.typename.typename;
-                if(it.paraList != null){
-                    it.paraList.forEach(para->para.accept(this));
-                    for(int i = 0;i < it.paraList.size(); ++i){
-                        if(!it.paraList.get(i).type.Equals(tmp_func.paraList.get(i).type) && !it.paraList.get(i).type.equals(NULL_TYPE))
-                            throw new SemanticError("two function parameters' types are not same. ",it.pos);
+                if(it.Func_name.equals("size")){
+                    it.type = INT_TYPE;
+                }
+                else{
+                    FuncDefNode tmp_func = tmp_class.getFunc(it.Func_name);
+                    it.type = tmp_func.typename;
+                    if (it.paraList != null) {
+                        it.paraList.forEach(para -> para.accept(this));
+                        for (int i = 0; i < it.paraList.size(); ++i) {
+                            if (!it.paraList.get(i).type.Equals(tmp_func.paraList.get(i).type) && !it.paraList.get(i).type.equals(NULL_TYPE))
+                                throw new SemanticError("two function parameters' types are not same. ", it.pos);
+                        }
                     }
                 }
             }
@@ -380,7 +387,9 @@ public class SemanticChecker implements ASTVisitor {
             it.paraList.forEach(para-> para.accept(this));
         }
         if(it.stmts.stmts != null){
-            it.stmts.stmts.forEach(stmtNode -> stmtNode.accept(this));
+            for(var i : it.stmts.stmts){
+                if(i != null)i.accept(this);
+            }
         }
         if(it.typename.typename != null && !it.typename.Equals(VOID_TYPE) && !it.hasReturnStmt && !it.func_name.equals("main"))
             throw new SemanticError("the function needs return value!",it.pos);
