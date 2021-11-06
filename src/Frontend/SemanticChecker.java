@@ -327,7 +327,7 @@ public class SemanticChecker implements ASTVisitor {
                 }
             }
         }
-        it.stmt.accept(this);
+        if(it.stmt != null)it.stmt.accept(this);
         it.type = lambdaType;
         lambdaType = VOID_TYPE;
         inLambda = false;

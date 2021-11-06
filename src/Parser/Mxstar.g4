@@ -57,7 +57,7 @@ arrayType : (Int | Bool | String | Identifier)('[' ']')+;
 primary : '(' expression ')' | Identifier | literal | This | NULL;
 //字符串处理
 fragment ESC :
-    DbQuotation | '\\n' ;
+    DbQuotation | '\\n' | BackSlash | '\\"' ;
 STRING : '"' (ESC|.)*? '"';
 literal
     : DecimalInteger
