@@ -19,7 +19,8 @@ public class SemanticChecker implements ASTVisitor {
     GlobalScope gScope;
     Scope currentScope;
     boolean inFunction = false,inClass = false;
-    boolean inLoop = false,inLambda = false;
+    boolean inLambda = false;
+    int inLoop = 0;
 
     FuncDefNode currentFunction;
     ClassDefNode currentClass;
@@ -90,7 +91,7 @@ public class SemanticChecker implements ASTVisitor {
         if(!it.condition.type.Equals(BOOL_TYPE))throw new SemanticError("if condition cannot be judged!",it.pos);
         else {
             currentScope = new Scope(currentScope);
-            it.thenStmt.accept(this);
+            if(it.thenStmt != null)it.thenStmt.accept(this);
             currentScope = currentScope.parent;
         }
         if(it.elseStmt != null){
@@ -130,16 +131,16 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit(WhileStmtNode it) {
-        inLoop = true;
+        inLoop ++;
         if(it.condition == null)throw new SemanticError("while condition is necessary!",it.pos);
         it.condition.accept(this);
         if(!it.condition.type.Equals(BOOL_TYPE))throw new SemanticError("while condition cannot be judged!",it.pos);
         else{
             currentScope = new Scope(currentScope);
-            it.thenStmt.accept(this);
+            if(it.thenStmt != null)it.thenStmt.accept(this);
             currentScope = currentScope.parent;
         }
-        inLoop = false;
+        inLoop --;
     }
 
     @Override
@@ -151,7 +152,7 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit(ForStmtNode it) {
-        inLoop = true;
+        inLoop ++;
         currentScope = new Scope(currentScope);
         if(it.init1 != null)it.init1.accept(this);
         if(it.init2 != null)it.init2.accept(this);
@@ -167,7 +168,7 @@ public class SemanticChecker implements ASTVisitor {
             else it.thenStmt.accept(this);
         }
         currentScope = currentScope.parent;
-        inLoop = false;
+        inLoop --;
     }
 
     @Override
@@ -184,12 +185,12 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit(ContinueStmtNode it) {
-        if(!inLoop)throw new SemanticError("continue sentence out of loops!",it.pos);
+        if(inLoop <= 0)throw new SemanticError("continue sentence out of loops!",it.pos);
     }
 
     @Override
     public void visit(BreakStmtNode it) {
-        if(!inLoop)throw new SemanticError("break sentence out of loops!",it.pos);
+        if(inLoop <= 0)throw new SemanticError("break sentence out of loops!",it.pos);
     }
 
     @Override
@@ -228,6 +229,7 @@ public class SemanticChecker implements ASTVisitor {
                     FuncDefNode tmp_func = tmp_class.getFunc(it.Func_name);
                     it.type = tmp_func.typename;
                     if (it.paraList != null) {
+                        if(tmp_func.paraList == null || it.paraList.size() != tmp_func.paraList.size())throw new SemanticError("parameters not fit",it.pos);
                         it.paraList.forEach(para -> para.accept(this));
                         for (int i = 0; i < it.paraList.size(); ++i) {
                             if (!it.paraList.get(i).type.Equals(tmp_func.paraList.get(i).type) && !it.paraList.get(i).type.equals(NULL_TYPE))
@@ -275,12 +277,38 @@ public class SemanticChecker implements ASTVisitor {
         if(inClass){
             GlobalScope nowClassScope = gScope.classTable.get(currentClass.class_name);
             if(!nowClassScope.containsFunc(it.func_name.content) && !gScope.containsFunc(it.func_name.content))throw new SemanticError("the function was not found!",it.pos);
-            if(nowClassScope.containsFunc(it.func_name.content))it.type = nowClassScope.getFunc(it.func_name.content).typename;
+            if(nowClassScope.containsFunc(it.func_name.content)) {
+                FuncDefNode tmp_func = nowClassScope.getFunc(it.func_name.content);
+                it.type = tmp_func.typename;
+                if(it.paraList != null){
+                    if(tmp_func.paraList == null || it.paraList.size() != tmp_func.paraList.size()){
+                        throw new SemanticError("wrong size of parameter list!", it.pos);
+                    }else{
+                        it.paraList.forEach(para->para.accept(this));
+                        for (int i = 0; i < it.paraList.size(); ++i) {
+                            if (!it.paraList.get(i).type.Equals(tmp_func.paraList.get(i).type) && !it.paraList.get(i).type.equals(NULL_TYPE))
+                                throw new SemanticError("two function parameters' types are not same. ", it.pos);
+                        }
+                    }
+                }
+            }
             else it.type = gScope.getFunc(it.func_name.content).typename;
         }
         else{
             if(!gScope.containsFunc(it.func_name.content))throw new SemanticError("the function was not found!",it.pos);
-            it.type = gScope.getFunc(it.func_name.content).typename;
+            FuncDefNode tmp_func = gScope.getFunc(it.func_name.content);
+            it.type = tmp_func.typename;
+            if(it.paraList != null){
+                if(tmp_func.paraList == null || it.paraList.size() != tmp_func.paraList.size()){
+                    throw new SemanticError("wrong size of parameter list!", it.pos);
+                }else{
+                    it.paraList.forEach(para->para.accept(this));
+                    for (int i = 0; i < it.paraList.size(); ++i) {
+                        if (!it.paraList.get(i).type.Equals(tmp_func.paraList.get(i).type) && !it.paraList.get(i).type.equals(NULL_TYPE))
+                            throw new SemanticError("two function parameters' types are not same. ", it.pos);
+                    }
+                }
+            }
         }
     }
 

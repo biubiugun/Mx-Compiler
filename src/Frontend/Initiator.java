@@ -19,17 +19,25 @@ public class Initiator implements ASTVisitor{
 
     public GlobalScope initializeBuiltIn(){
         //builtInFunction
-        FuncDefNode printFunc = new FuncDefNode(null,new TypeNode(null,"void"),"print",null,null);
+        ArrayList<varDeclarationNode>printParaList = new ArrayList<>();
+        printParaList.add(new varDeclarationNode(null,"str",null,new TypeNode(null,"string")));
+        FuncDefNode printFunc = new FuncDefNode(null,new TypeNode(null,"void"),"print",printParaList,null);
         initScope.setFunc("print",printFunc);
 
-        FuncDefNode printInFunc = new FuncDefNode(null,new TypeNode(null,"void"),"printIn",null,null);
+        ArrayList<varDeclarationNode>printlnParaList = new ArrayList<>();
+        printlnParaList.add(new varDeclarationNode(null,"str",null,new TypeNode(null,"string")));
+        FuncDefNode printInFunc = new FuncDefNode(null,new TypeNode(null,"void"),"printIn",printlnParaList,null);
         initScope.setFunc("println",printInFunc);
 
-        FuncDefNode printIntFunc = new FuncDefNode(null,new TypeNode(null,"void"),"printInt",null,null);
+        ArrayList<varDeclarationNode>printIntParaList = new ArrayList<>();
+        printIntParaList.add(new varDeclarationNode(null,"n",null,new TypeNode(null,"int")));
+        FuncDefNode printIntFunc = new FuncDefNode(null,new TypeNode(null,"void"),"printInt",printIntParaList,null);
         initScope.setFunc("printInt",printIntFunc);
 
-        FuncDefNode printInIntFunc = new FuncDefNode(null,new TypeNode(null,"void"),"printInInt",null,null);
-        initScope.setFunc("printlnInt",printInIntFunc);
+        ArrayList<varDeclarationNode>printlnIntParaList = new ArrayList<>();
+        printlnIntParaList.add(new varDeclarationNode(null,"n",null,new TypeNode(null,"int")));
+        FuncDefNode printlnIntFunc = new FuncDefNode(null,new TypeNode(null,"void"),"printlnInt",printlnIntParaList,null);
+        initScope.setFunc("printlnInt",printlnIntFunc);
 
         FuncDefNode getStringFunc = new FuncDefNode(null,new TypeNode(null,"string"),"getString",null,null);
         initScope.setFunc("getString",getStringFunc);
@@ -37,7 +45,9 @@ public class Initiator implements ASTVisitor{
         FuncDefNode getIntFunc = new FuncDefNode(null,new TypeNode(null,"int"),"getInt",null,null);
         initScope.setFunc("getInt",getIntFunc);
 
-        FuncDefNode toStringFunc = new FuncDefNode(null,new TypeNode(null,"string"),"toString",null,null);
+        ArrayList<varDeclarationNode>toStringParaList = new ArrayList<>();
+        toStringParaList.add(new varDeclarationNode(null,"i",null,new TypeNode(null,"int")));
+        FuncDefNode toStringFunc = new FuncDefNode(null,new TypeNode(null,"string"),"toString",toStringParaList,null);
         initScope.setFunc("toString",toStringFunc);
 
         //builtInClass
