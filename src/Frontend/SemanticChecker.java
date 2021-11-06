@@ -19,8 +19,7 @@ public class SemanticChecker implements ASTVisitor {
     GlobalScope gScope;
     Scope currentScope;
     boolean inFunction = false,inClass = false;
-    boolean inLambda = false;
-    int inLoop = 0;
+    int inLoop = 0,inLambda = 0;
 
     FuncDefNode currentFunction;
     ClassDefNode currentClass;
@@ -103,7 +102,7 @@ public class SemanticChecker implements ASTVisitor {
 
     @Override
     public void visit(ReturnStmtNode it) {
-        if(!inFunction && !inLambda)throw new SemanticError("not in function or Lambda but return!",it.pos);
+        if(!inFunction && inLambda <= 0)throw new SemanticError("not in function or Lambda but return!",it.pos);
         if(inFunction){
             if (it.expr == null) {
                 if (!currentFunction.typename.Equals(VOID_TYPE) && currentFunction.typename.typename != null) {
@@ -120,7 +119,7 @@ public class SemanticChecker implements ASTVisitor {
             }
             currentFunction.hasReturnStmt = true;
         }
-        if(inLambda){
+        if(inLambda > 0){
             if(it.expr == null)lambdaType = VOID_TYPE;
             else{
                 it.expr.accept(this);
@@ -315,7 +314,7 @@ public class SemanticChecker implements ASTVisitor {
     @Override
     public void visit(LambdaExprNode it) {
         currentScope = new Scope(currentScope);
-        inLambda = true;
+        inLambda++;
         if((it.paraList == null && it.exprList != null) || (it.paraList != null && it.exprList == null))throw new SemanticError("invalid assignment for lambda!",it.pos);
         if(it.paraList != null){
             if(it.paraList.size() != it.exprList.size())throw new SemanticError("values are not equal to objects!",it.pos);
@@ -330,7 +329,7 @@ public class SemanticChecker implements ASTVisitor {
         if(it.stmt != null)it.stmt.accept(this);
         it.type = lambdaType;
         lambdaType = VOID_TYPE;
-        inLambda = false;
+        inLambda--;
         currentScope = currentScope.parent;
     }
 
