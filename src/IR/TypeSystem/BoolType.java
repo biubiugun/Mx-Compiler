@@ -1,6 +1,6 @@
 package IR.TypeSystem;
 
-public class BoolType extends IRType{
+public class BoolType extends SingleValueType{
     public BoolType(){
         super();
     }

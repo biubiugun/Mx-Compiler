@@ -1,6 +1,6 @@
 package IR.TypeSystem;
 
-public class PointerType extends IRType{
+public class PointerType extends SingleValueType{
     public IRType type;
     public int level;
 

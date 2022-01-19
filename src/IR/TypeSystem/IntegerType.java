@@ -1,6 +1,6 @@
 package IR.TypeSystem;
 
-public class IntegerType extends IRType{
+public class IntegerType extends SingleValueType{
     public int bitWidth;
 
     public IntegerType(int _bitWidth){
