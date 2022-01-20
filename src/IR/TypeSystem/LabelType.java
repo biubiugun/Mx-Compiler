@@ -1,8 +1,10 @@
 package IR.TypeSystem;
 
 public class LabelType extends IRType{
-    public LabelType(){
+    public String name;
+    public LabelType(String _name){
         super();
+        name = _name;
     }
 
     @Override
