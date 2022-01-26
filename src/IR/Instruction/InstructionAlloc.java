@@ -16,6 +16,6 @@ public class InstructionAlloc extends Instruction{
 
     @Override
     public String toString(){
-        return destReg.toString() + " = alloca " + type.toString();
+        return destReg.toString() + " = alloca " + type.toString() + ", align " + destReg.typename.byteSize();
     }
 }
