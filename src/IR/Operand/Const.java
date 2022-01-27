@@ -1,10 +1,11 @@
 package IR.Operand;
 
+import IR.TypeSystem.IRType;
 import IR.TypeSystem.SingleValueType;
 
-public abstract class Const extends Operand{
-    public Const(SingleValueType _type){
-        super(_type,null);
+public abstract class Const extends User{
+    public Const(String _name,IRType _type){
+        super(_name,_type);
     }
 
     @Override

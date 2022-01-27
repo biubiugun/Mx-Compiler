@@ -1,37 +1,55 @@
 package IR;
 
-import IR.Operand.Operand;
-import IR.Operand.Register;
+
+import IR.Operand.User;
+import IR.Operand.Value;
+import IR.TypeSystem.FunctionType;
 import IR.TypeSystem.IRType;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
-public class IRFunction {
-    public IRType returnType;
-    public String FunctionName;
-    public ArrayList<Register> formParaList;
-    public LinkedList<IRBasicBlock> blockList;
+public class IRFunction extends User {
+    public ArrayList<IRBasicBlock> blockList;
     public boolean isBuiltin;
+    public boolean beenUsed;
 
-    public IRFunction(IRType _returnType, String _name, ArrayList<Register> _formParaList, LinkedList<IRBasicBlock> _blockList){
-        returnType = _returnType;
-        FunctionName = _name;
-        formParaList = _formParaList;
-        blockList = _blockList;
+    public IRFunction(String _name, IRType _type){
+        super(_name,_type);
         isBuiltin = false;
+        beenUsed = false;
+        blockList = new ArrayList<>();
     }
 
-    public String toString(ArrayList<Operand> realParaList){
-        StringBuilder str = new StringBuilder("(");
-        if(realParaList != null){
-            str.append(realParaList.get(0).typename.toString()).append(" ").append(realParaList.get(0).toString());
-            for(int i = 1;i < realParaList.size(); ++i){
-                str.append(",").append(realParaList.get(i).typename.toString()).append(" ").append(realParaList.get(i).toString());
+    public void addBlock(IRBasicBlock _block){blockList.add(_block);}
+
+    public void addPara(Value _para){operandList.add(_para);}
+
+    @Override
+    public String GetName(){return "@" + name;}
+
+    @Override
+    public String toString(){
+        StringBuilder str = new StringBuilder();
+        if(!isBuiltin){
+            str.append("define ").append(type.toString()).append(" ").append(GetName()).append("(");
+            if(!this.operandList.isEmpty()){
+                operandList.forEach(op -> str.append(op.printValueString()).append(", "));
+                str.delete(str.length() - 2,str.length());
             }
+            str.append(")\t{\n");
+            blockList.forEach(bk -> str.append(bk.toString()));
+            str.append(")\n");
+        }else if(beenUsed){
+            str.append("declare ").append(type.toString()).append(" ").append(GetName()).append("(");
+            if(!((FunctionType)type).paraTypeList.isEmpty()){
+                ((FunctionType)type).paraTypeList.forEach(para -> str.append(para.toString()).append(", "));
+                str.delete(str.length() - 2,str.length());
+            }
+            str.append(")\n");
         }
-        str.append(")");
-        return returnType.toString() + " @" + FunctionName + str.toString();
+        return str.toString();
     }
 
+    @Override
+    public void accept(IRVisitor _visitor){_visitor.visit(this);}
 }

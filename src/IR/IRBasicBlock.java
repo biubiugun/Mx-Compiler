@@ -1,37 +1,56 @@
 package IR;
 
 import IR.Instruction.Instruction;
+import IR.Instruction.InstructionBr;
+import IR.Instruction.InstructionRet;
+import IR.Operand.Value;
+import IR.TypeSystem.IRType;
 import IR.TypeSystem.LabelType;
 
 import java.util.LinkedList;
 
-public class IRBasicBlock {
-    public LabelType BlockLabel;
+public class IRBasicBlock extends Value {
     public Instruction terminalInst;
     public LinkedList<Instruction> InstList;
-    public int loopDepth;
+    public IRFunction function_belongs_to;
 
-    public IRBasicBlock(String label_name){
+    public IRBasicBlock(String _name, IRFunction _parent_func){
+        super(_name,new LabelType());
         InstList = new LinkedList<>();
         terminalInst = null;
-        loopDepth = 0;
-        BlockLabel = new LabelType(label_name);
+        function_belongs_to = _parent_func;
     }
 
-    public void push_back(Instruction Inst){
-        InstList.add(Inst);
-    }
-
-    public void setTerminalInst(Instruction Inst){
-        if(terminalInst == null){
-            terminalInst = Inst;
+    public void push_back_inst(Instruction Inst){
+        if(Inst instanceof InstructionBr || Inst instanceof InstructionRet){
+            if(terminalInst == null){
+                terminalInst = Inst;
+            }else{
+                throw new RuntimeException("[Debug]: set terminator twice!");
+            }
         }
+        else InstList.add(Inst);
     }
 
+//    public void setTerminalInst(Instruction Inst){
+//        if(terminalInst == null){
+//            terminalInst = Inst;
+//        }
+//    }
+
+    @Override
     public String toString(){
-        return "%" + BlockLabel.name;
+        StringBuilder str = new StringBuilder(name + ":");
+        if(!userList.isEmpty()){//pred
+            str.append("\t\t\t\t\t ;preds = ");
+            userList.forEach(user -> str.append(((InstructionBr)user).block_belongs_to.GetName()).append(", "));
+            str.delete(str.length() - 2,str.length());
+        }
+        str.append("\n");
+        InstList.forEach(inst -> str.append("\t").append(inst.toString()).append("\n"));
+        str.append("\t").append(terminalInst.toString()).append("\n");
+        return str.toString();
     }
 
-    public String getBlockLabel(){return BlockLabel.name;}
-
+    public void accept(IRVisitor _visitor){_visitor.visit(this);}
 }
