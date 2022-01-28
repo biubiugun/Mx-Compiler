@@ -10,6 +10,7 @@ public abstract class Instruction extends User {
     public Instruction(IRBasicBlock _block, String _name, IRType _type){
         super(_name,_type);
         block_belongs_to = _block;
+        if(_block != null) _block.push_back_inst(this);
     }
 
     @Override

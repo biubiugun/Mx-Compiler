@@ -1,21 +1,23 @@
 package IR.Instruction;
 
 import IR.IRBasicBlock;
+import IR.IRVisitor;
 import IR.Operand.Operand;
 import IR.TypeSystem.IRType;
 
 public class InstructionAlloc extends Instruction{
-    public IRType type;
-    public Operand destReg;
 
-    public InstructionAlloc(IRType _type, Operand _destReg, IRBasicBlock _block){
-        super(_block);
-        type = _type;
-        destReg = _destReg;
+    public InstructionAlloc(String _name,IRType _type,IRBasicBlock _block){
+        super(_block,_name + "_alloc",_type);
     }
 
     @Override
     public String toString(){
-        return destReg.toString() + " = alloca " + type.toString() + ", align " + destReg.typename.byteSize();
+        return GetName() + " = alloca " + type.dePointed().toString() + ", align " + type.dePointed().byteSize();
+    }
+
+    @Override
+    public void accept(IRVisitor _visitor){
+        _visitor.visit(this);
     }
 }

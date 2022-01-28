@@ -1,30 +1,34 @@
 package IR.Instruction;
 
 import IR.IRBasicBlock;
+import IR.IRVisitor;
 import IR.Operand.Operand;
+import IR.Operand.Value;
+import IR.TypeSystem.IntegerType;
 
 public class InstructionIcmp extends Instruction{
-    public Operand destReg;
-    public Operand op1;
-    public Operand op2;
 
-    public enum cmp_method{
+    public static enum cmp_method{
         eq,ne,ugt,uge,ult,ule,sgt,sge,slt,sle
     }
 
     public cmp_method method;
 
-    public InstructionIcmp(Operand _destReg, IRBasicBlock _block, Operand _op1, Operand _op2, cmp_method _method){
-        super(_block);
-        destReg = _destReg;
-        op1 = _op1;
-        op2 = _op2;
-        assert op1.typename.equals(op2.typename);
+    public InstructionIcmp(IRBasicBlock _block, Value _op1, Value _op2, cmp_method _method){
+        super(_block,_method.toString(),new IntegerType(1));
+        assert _op1.type.equals(_op2.type);
         method = _method;
+        addOperand(_op1);
+        addOperand(_op2);
     }
 
     @Override
     public String toString(){
-        return destReg.toString() + " = icmp " + method.toString() + " " + op1.typename.toString() + " " + op1.toString() + ", " + op2.toString();
+        return GetName() + " = icmp " + method.toString() + " " + getOperand(0).printValueString() + ", " + getOperand(1).GetName();
+    }
+
+    @Override
+    public void accept(IRVisitor _visitor){
+        _visitor.visit(this);
     }
 }

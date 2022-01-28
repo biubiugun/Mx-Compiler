@@ -1,21 +1,22 @@
 package IR.Instruction;
 
 import IR.IRBasicBlock;
-import IR.Operand.Operand;
-import IR.TypeSystem.PointerType;
+import IR.IRVisitor;
+import IR.Operand.Value;
 
 public class InstructionLoad extends Instruction{
-    public Operand destReg;
-    public Operand pointer;
-
-    public InstructionLoad(Operand _destReg, IRBasicBlock _block, Operand _pointer, int _alignSize){
-        super(_block);
-        destReg = _destReg;
-        pointer = _pointer;
+    public InstructionLoad(String _name, Value _address, IRBasicBlock _block) {
+        super(_block,_name+"_load",_address.type.dePointed());
+        this.addOperand(_address);
     }
 
     @Override
-    public String toString(){
-        return destReg.toString() + " = load " + destReg.typename.toString() + ", "  + pointer.typename.toString() + " " + pointer.toString() + ", align " + destReg.typename.byteSize();
+    public String toString() {
+        return this.GetName() + " = load " + this.type.toString() + ", " + this.getOperand(0).printValueString() + ", align " + this.type.byteSize();
+    }
+
+    @Override
+    public void accept(IRVisitor _visitor) {
+        _visitor.visit(this);
     }
 }

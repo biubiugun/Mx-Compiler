@@ -24,11 +24,11 @@ public class SemanticChecker implements ASTVisitor {
     FuncDefNode currentFunction;
     ClassDefNode currentClass;
 
-    TypeNode NULL_TYPE = new TypeNode(null,"null");
-    TypeNode INT_TYPE = new TypeNode(null,"int");
-    TypeNode BOOL_TYPE = new TypeNode(null,"bool");
-    TypeNode STRING_TYPE = new TypeNode(null,"string");
-    TypeNode VOID_TYPE = new TypeNode(null,"void");
+    public TypeNode NULL_TYPE = new TypeNode(null,"null");
+    public TypeNode INT_TYPE = new TypeNode(null,"int");
+    public TypeNode BOOL_TYPE = new TypeNode(null,"bool");
+    public TypeNode STRING_TYPE = new TypeNode(null,"string");
+    public TypeNode VOID_TYPE = new TypeNode(null,"void");
 
     TypeNode lambdaType = VOID_TYPE;
 

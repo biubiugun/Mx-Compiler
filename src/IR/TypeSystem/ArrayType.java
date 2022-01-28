@@ -24,6 +24,6 @@ public class ArrayType extends IRType{
 
     @Override
     public int byteSize(){
-        return dim * type.byteSize();
+        throw new RuntimeException("[Debug] Why use byteSize in Array type ?");
     }
 }

@@ -1,32 +1,37 @@
 package IR.Instruction;
 
 import IR.IRBasicBlock;
-import IR.Operand.Operand;
-import IR.TypeSystem.PointerType;
-
-import java.util.ArrayList;
+import IR.IRVisitor;
+import IR.Operand.Value;
+import IR.TypeSystem.IRType;
 
 public class InstructionGetelementptr extends Instruction{
-    public Operand destReg;
-    public Operand pointer;
-    public ArrayList<Operand> indexList;
+    // 0 for basePointer ; 1 -> n for index
+    public InstructionGetelementptr(IRType targetType, Value calculatedPointer, IRBasicBlock _block) {
+        super( _block,"_getelementptr", targetType);
+        this.addOperand(calculatedPointer);
+    }
 
-    public InstructionGetelementptr(Operand _ptr, ArrayList<Operand> _indexList, Operand _destReg, IRBasicBlock _block){
-        super(_block);
-        pointer = _ptr;
-        indexList = _indexList;
-        destReg = _destReg;
+    public InstructionGetelementptr addIndex(Value _value){
+        this.addOperand(_value);
+        return this;
     }
 
     @Override
-    public String toString(){
-        StringBuilder str = new StringBuilder(destReg.toString());
-        str.append(" = getelementptr inbounds ").append(((PointerType)pointer.typename).type.toString()).append(", ");
-        str.append(pointer.typename.toString()).append(" ").append(pointer.toString());
-        for(var i : indexList){
-            str.append(", ").append(i.typename.toString()).append(" ").append(i.toString());
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        str.append(this.GetName()).append(" = getelementptr inbounds ").append(getOperand(0).type.dePointed().toString())
+                .append(", ").append(getOperand(0).printValueString());
+        assert this.operandList.size() > 1;
+        for(int i = 1;i < operandList.size(); ++i) {
+            str.append(", ").append(getOperand(i).printValueString());
         }
         return str.toString();
+    }
+
+    @Override
+    public void accept(IRVisitor visitor) {
+        visitor.visit(this);
     }
 
 }

@@ -22,33 +22,79 @@ public class Initiator implements ASTVisitor{
         ArrayList<varDeclarationNode>printParaList = new ArrayList<>();
         printParaList.add(new varDeclarationNode(null,"str",null,new TypeNode(null,"string")));
         FuncDefNode printFunc = new FuncDefNode(null,new TypeNode(null,"void"),"print",printParaList,null);
+        printFunc.isBuiltin = true;
         initScope.setFunc("print",printFunc);
 
         ArrayList<varDeclarationNode>printlnParaList = new ArrayList<>();
         printlnParaList.add(new varDeclarationNode(null,"str",null,new TypeNode(null,"string")));
         FuncDefNode printInFunc = new FuncDefNode(null,new TypeNode(null,"void"),"printIn",printlnParaList,null);
+        printInFunc.isBuiltin = true;
         initScope.setFunc("println",printInFunc);
 
         ArrayList<varDeclarationNode>printIntParaList = new ArrayList<>();
         printIntParaList.add(new varDeclarationNode(null,"n",null,new TypeNode(null,"int")));
         FuncDefNode printIntFunc = new FuncDefNode(null,new TypeNode(null,"void"),"printInt",printIntParaList,null);
+        printIntFunc.isBuiltin = true;
         initScope.setFunc("printInt",printIntFunc);
 
         ArrayList<varDeclarationNode>printlnIntParaList = new ArrayList<>();
         printlnIntParaList.add(new varDeclarationNode(null,"n",null,new TypeNode(null,"int")));
         FuncDefNode printlnIntFunc = new FuncDefNode(null,new TypeNode(null,"void"),"printlnInt",printlnIntParaList,null);
+        printlnIntFunc.isBuiltin = true;
         initScope.setFunc("printlnInt",printlnIntFunc);
 
         FuncDefNode getStringFunc = new FuncDefNode(null,new TypeNode(null,"string"),"getString",null,null);
+        getStringFunc.isBuiltin = true;
         initScope.setFunc("getString",getStringFunc);
 
         FuncDefNode getIntFunc = new FuncDefNode(null,new TypeNode(null,"int"),"getInt",null,null);
+        getIntFunc.isBuiltin = true;
         initScope.setFunc("getInt",getIntFunc);
 
         ArrayList<varDeclarationNode>toStringParaList = new ArrayList<>();
         toStringParaList.add(new varDeclarationNode(null,"i",null,new TypeNode(null,"int")));
         FuncDefNode toStringFunc = new FuncDefNode(null,new TypeNode(null,"string"),"toString",toStringParaList,null);
+        toStringFunc.isBuiltin = true;
         initScope.setFunc("toString",toStringFunc);
+
+        // named for _malloc so that user can not call this function
+        ArrayList<varDeclarationNode> tmp_List = new ArrayList<>();
+        FuncDefNode tmp = new FuncDefNode(null,new TypeNode(null,"string"),"_malloc",tmp_List,null);
+        tmp.isBuiltin = true;
+        initScope.setFunc("_malloc",tmp);
+
+        // operator overload for string
+        tmp_List = new ArrayList<>();
+        tmp_List.add(new varDeclarationNode(null,"str1",null,new TypeNode(null,"string")));
+        tmp_List.add(new varDeclarationNode(null,"str2",null,new TypeNode(null,"string")));
+
+        tmp = new FuncDefNode(null,new TypeNode(null,"string"),"_str_splice",tmp_List,null);
+        tmp.isBuiltin = true;
+        initScope.setFunc("_str_splice",tmp);
+
+        tmp = new FuncDefNode(null,new TypeNode(null,"bool"),"_str_eq",tmp_List,null);
+        tmp.isBuiltin = true;
+        initScope.setFunc("_str_eq",tmp);
+
+        tmp = new FuncDefNode(null,new TypeNode(null,"bool"),"_str_ne",tmp_List,null);
+        tmp.isBuiltin = true;
+        initScope.setFunc("_str_ne",tmp);
+
+        tmp = new FuncDefNode(null,new TypeNode(null,"bool"),"_str_lt",tmp_List,null);
+        tmp.isBuiltin = true;
+        initScope.setFunc("_str_lt",tmp);
+
+        tmp = new FuncDefNode(null,new TypeNode(null,"bool"),"_str_le",tmp_List,null);
+        tmp.isBuiltin = true;
+        initScope.setFunc("_str_le",tmp);
+
+        tmp = new FuncDefNode(null,new TypeNode(null,"bool"),"_str_gt",tmp_List,null);
+        tmp.isBuiltin = true;
+        initScope.setFunc("_str_gt",tmp);
+
+        tmp = new FuncDefNode(null,new TypeNode(null,"bool"),"_str_ge",tmp_List,null);
+        tmp.isBuiltin = true;
+        initScope.setFunc("_str_ge",tmp);
 
         //builtInClass
         initScope.setClass("int",new GlobalScope(initScope));
@@ -58,12 +104,12 @@ public class Initiator implements ASTVisitor{
         ArrayList<varDeclarationNode> subStringPara = new ArrayList<>();
         subStringPara.add(new varDeclarationNode(null,"left",null,new TypeNode(null,"int")));
         subStringPara.add(new varDeclarationNode(null,"right",null,new TypeNode(null,"int")));
-        stringClassScope.setFunc("substring",new FuncDefNode(null,new TypeNode(null,"string"),"substring",subStringPara,null));
-        stringClassScope.setFunc("length",new FuncDefNode(null,new TypeNode(null,"int"),"length",null,null));
-        stringClassScope.setFunc("parseInt",new FuncDefNode(null,new TypeNode(null,"int"),"parseInt",null,null));
+        stringClassScope.setFunc("substring",new FuncDefNode(null,new TypeNode(null,"string"),"substring",subStringPara,null,true));
+        stringClassScope.setFunc("length",new FuncDefNode(null,new TypeNode(null,"int"),"length",null,null,true));
+        stringClassScope.setFunc("parseInt",new FuncDefNode(null,new TypeNode(null,"int"),"parseInt",null,null,true));
         ArrayList<varDeclarationNode> ordPara = new ArrayList<>();
         ordPara.add(new varDeclarationNode(null,"pos",null,new TypeNode(null,"int")));
-        stringClassScope.setFunc("ord",new FuncDefNode(null,new TypeNode(null,"int"),"ord",ordPara,null));
+        stringClassScope.setFunc("ord",new FuncDefNode(null,new TypeNode(null,"int"),"ord",ordPara,null,true));
         initScope.setClass("string",stringClassScope);
 
         return initScope;

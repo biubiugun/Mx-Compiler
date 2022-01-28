@@ -5,12 +5,18 @@ import java.util.ArrayList;
 public class FunctionType extends IRType{
     public IRType returnType;
     public ArrayList<IRType> paraTypeList;
-    public String funcName;
+    public ArrayList<String> paraNameList;
 
-    public FunctionType(IRType _returnType, ArrayList<IRType> _paraTypeList){
+    public FunctionType(IRType _returnType){
         super();
         returnType = _returnType;
-        paraTypeList = _paraTypeList;
+        paraTypeList = new ArrayList<>();
+        paraNameList = new ArrayList<>();
+    }
+
+    public void addPara(IRType _type, String _name){
+        paraNameList.add(_name);
+        paraTypeList.add(_type);
     }
 
     @Override
