@@ -13,6 +13,8 @@ public class IRFunction extends User {
     public boolean isBuiltin;
     public boolean beenUsed;
 
+    public Value returnAddress = null;
+
     public IRFunction(String _name, IRType _type){
         super(_name,_type);
         isBuiltin = false;

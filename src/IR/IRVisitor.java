@@ -32,6 +32,8 @@ public interface IRVisitor {
 
     void visit(InstructionGetelementptr it);
 
+    void visit(InstructionGlobal it);
+
     void visit(InstructionIcmp it);
 
     void visit(InstructionLoad it);
@@ -39,4 +41,8 @@ public interface IRVisitor {
     void visit(InstructionRet it);
 
     void visit(InstructionStore it);
+
+    void visit(InstructionTrunc it);
+
+    void visit(InstructionZext it);
 }

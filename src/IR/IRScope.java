@@ -46,6 +46,12 @@ public class IRScope {
         }
     }
 
-    //upRoot
+    //go up scope
+    public IRScope Predecessor(){
+        assert fatherScope != null;
+        if(!validity)
+            validity = true;
+        return fatherScope;
+    }
 
 }

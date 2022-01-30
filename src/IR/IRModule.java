@@ -1,5 +1,6 @@
 package IR;
 
+import IR.Instruction.InstructionGlobal;
 import IR.Operand.GlobalVariable;
 import IR.Operand.StringConst;
 import IR.TypeSystem.StructType;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 public class IRModule {
     public ArrayList<IRFunction> functionList;
     public ArrayList<StringConst> stringList;
-    public ArrayList<GlobalVariable> globalVariableList;
+    public ArrayList<InstructionGlobal> globalVariableList;
     public ArrayList<StructType> structList;
     public ArrayList<IRFunction> InitList;
 
@@ -29,12 +30,16 @@ public class IRModule {
         stringList.add(_str);
     }
 
-    public void addVar(GlobalVariable _globalVar){
+    public void addVar(InstructionGlobal _globalVar){
         globalVariableList.add(_globalVar);
     }
 
     public void addClass(StructType _class){
         structList.add(_class);
+    }
+
+    public void addInitFunc(IRFunction _global_init){
+        InitList.add(_global_init);
     }
 
     public String toString(){

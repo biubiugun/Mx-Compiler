@@ -5,12 +5,12 @@ import Util.position;
 
 public class BinaryExprNode extends ExprNode{
     public enum op{
-        Mul,Div,Mod,
-        And,Or,AndAnd,OrOr,Caret,
-        Plus,Minus,
-        LeftShift,RightShift,
-        Less,Greater,LessEqual,GreaterEqual,
-        Equal,NotEqual,
+        Mul,Div,Mod,// *,/,%
+        And,Or,AndAnd,OrOr,Caret,// &,|,&&,||,^
+        Plus,Minus,// +,-
+        LeftShift,RightShift,// <<,>>
+        Less,Greater,LessEqual,GreaterEqual,// <,>,<=,>=
+        Equal,NotEqual,// ==,!=
         ERROR
     }
 

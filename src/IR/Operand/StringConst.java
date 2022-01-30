@@ -21,7 +21,7 @@ public class StringConst extends Const{
 
     @Override
     public String toString() {
-        return GetName() + " = private unnamed_addr constant " + ((PointerType)type).type.toString() + " c\"" + processRaw(value) + "\", align 1";
+        return GetName() + " = private unnamed_addr constant " + ((PointerType)type).type_base.toString() + " c\"" + processRaw(value) + "\", align 1";
     }
 
     private String processRaw(String raw){
