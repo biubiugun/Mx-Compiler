@@ -1,9 +1,9 @@
 package Backend.Operand;
 
-public abstract class Operand {
+public abstract class BaseReg {
     public String name;
 
-    public Operand(String _name){
+    public BaseReg(String _name){
         name = _name;
     }
 

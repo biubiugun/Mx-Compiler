@@ -1,11 +1,12 @@
 package IR.Operand;
 
+import Backend.Operand.BaseReg;
 import IR.TypeSystem.IRType;
 
 import java.util.ArrayList;
 
 public class Value {
-    public Operand ASMOp;
+    public BaseReg ASMOp;
     public String name;
     public IRType type;
     public ArrayList<User> userList;
