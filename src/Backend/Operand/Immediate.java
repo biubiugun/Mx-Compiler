@@ -11,8 +11,4 @@ public class Immediate extends BaseReg{
     public Immediate negative(){
         return new Immediate(-value);
     }
-
-    public String toString(){
-        return name;
-    }
 }

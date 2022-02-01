@@ -8,6 +8,8 @@ import IR.Operand.StringConst;
 
 public interface IRVisitor {
 
+    void visit(IRModule it);
+
     void visit(BoolConst it);
 
     void visit(IntegerConst it);
