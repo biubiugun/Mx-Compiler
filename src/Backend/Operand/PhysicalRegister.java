@@ -13,7 +13,7 @@ public class PhysicalRegister extends Register{
         }
     };
 
-    public PhysicalRegister getPhysicalReg(int i){
+    public static PhysicalRegister getPhysicalReg(int i){
         return new PhysicalRegister(physical_register_nameList.get(i));
     }
 

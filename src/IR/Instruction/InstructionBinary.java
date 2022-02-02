@@ -11,7 +11,7 @@ public class InstructionBinary extends Instruction{
     public static enum Operation{
         add,sub,mul,sdiv,srem,shl,ashr,and,or,xor
     }
-    Operation operation;
+    public Operation operation;
 
     public InstructionBinary(IRBasicBlock _block, Value op1, Value op2, Operation _operation){
         super(_block,_operation.toString(),op1.type);
