@@ -275,7 +275,8 @@ public class ASMBuilder implements IRVisitor {
     }
 
     private BaseReg load_immediate_to_reg(BaseReg imm){
-        if(imm instanceof Immediate tmp_imm){
+        if(imm instanceof Immediate){
+            Immediate tmp_imm = (Immediate) imm;
             imm = new VirtualRegister(nowFunction.virtual_index++);
             new Li_Inst(nowBlock).addBaseReg(imm,tmp_imm);
         }
