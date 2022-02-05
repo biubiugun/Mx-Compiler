@@ -21,9 +21,9 @@ public class Main {
 
     public static void main(String[] args) throws Exception{
 
-        String name = "src/selftest/test.mx";
-        InputStream input = new FileInputStream(name);
-//        InputStream input = System.in;
+//        String name = "src/selftest/test.mx";
+//        InputStream input = new FileInputStream(name);
+        InputStream input = System.in;
         PrintStream os = System.out;
         boolean semantic_test_only = false;
         boolean ir_test = false;
