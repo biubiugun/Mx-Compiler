@@ -21,6 +21,7 @@ public class ASMModule {
         str.append("\t").append(".text").append("\n");
         if(!functionList.isEmpty()){
             for(var i : functionList){
+                if(i.isBuiltin)continue;
                 str.append(i.print_ASM_string());
                 str.append("\n");
             }

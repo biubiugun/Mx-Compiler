@@ -1,7 +1,6 @@
 package IR;
 
 import IR.Instruction.InstructionGlobal;
-import IR.Operand.GlobalVariable;
 import IR.Operand.StringConst;
 import IR.TypeSystem.StructType;
 

@@ -2,13 +2,13 @@ package IR.Instruction;
 
 import IR.IRBasicBlock;
 import IR.IRVisitor;
-import IR.Operand.Operand;
 import IR.TypeSystem.IRType;
+import IR.TypeSystem.PointerType;
 
 public class InstructionAlloc extends Instruction{
 
     public InstructionAlloc(String _name,IRType _type,IRBasicBlock _block){
-        super(_block,_name + "_alloc",_type);
+        super(_block,_name + "_alloc",new PointerType(_type,1));
     }
 
     @Override

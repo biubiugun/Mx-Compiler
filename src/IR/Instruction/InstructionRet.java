@@ -2,7 +2,6 @@ package IR.Instruction;
 
 import IR.IRBasicBlock;
 import IR.IRVisitor;
-import IR.Operand.Operand;
 import IR.Operand.Value;
 import IR.TypeSystem.VoidType;
 

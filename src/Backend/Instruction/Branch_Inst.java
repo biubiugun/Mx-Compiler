@@ -19,6 +19,6 @@ public class Branch_Inst extends ASMInstruction{
 
     @Override
     public String print_ASM_string(){
-        return operator_name + "\t" + rd.GetName() + ", " + rs1.GetName() + ", " + rs2.GetName();
+        return operator_name + "\t" + rs1.GetName() + ", " + rs2.GetName() + ", " + rd.GetName();
     }
 }

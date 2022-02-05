@@ -40,7 +40,7 @@ public class IRFunction extends User {
             }
             str.append(")\t{\n");
             blockList.forEach(bk -> str.append(bk.toString()));
-            str.append(")\n");
+            str.append("}\n");
         }else if(beenUsed){
             str.append("declare ").append(type.toString()).append(" ").append(GetName()).append("(");
             if(!((FunctionType)type).paraTypeList.isEmpty()){

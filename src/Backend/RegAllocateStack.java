@@ -50,7 +50,8 @@ public class RegAllocateStack {
             ListIterator<ASMInstruction> it = block.InstList.listIterator();
             while (it.hasNext()){
                 ASMInstruction nextInst = it.next();
-                if(nextInst.rs1 instanceof VirtualRegister v_reg){
+                if(nextInst.rs1 instanceof VirtualRegister){
+                    VirtualRegister v_reg = (VirtualRegister) nextInst.rs1;
                     if(v_reg.colour != -1){
                         nextInst.rs1 = new PhysicalRegister(v_reg);
                     }else {
@@ -61,7 +62,8 @@ public class RegAllocateStack {
                         addInst_load_(it,"t1",offset);
                     }
                 }
-                if(nextInst.rs2 instanceof VirtualRegister v_reg){
+                if(nextInst.rs2 instanceof VirtualRegister){
+                    VirtualRegister v_reg = (VirtualRegister) nextInst.rs2;
                     if(v_reg.colour != -1){
                         nextInst.rs2 = new PhysicalRegister(v_reg);
                     }else {
@@ -72,7 +74,8 @@ public class RegAllocateStack {
                         addInst_load_(it,"t2",offset);
                     }
                 }
-                if(nextInst.rd instanceof VirtualRegister v_reg){
+                if(nextInst.rd instanceof VirtualRegister){
+                    VirtualRegister v_reg = (VirtualRegister) nextInst.rd;
                     if(v_reg.colour != -1){
                         nextInst.rd = new PhysicalRegister(v_reg);
                     }else {
@@ -102,7 +105,8 @@ public class RegAllocateStack {
             reg_name_order_table.clear();
             function.blockList.forEach(block -> {
                 block.InstList.forEach(inst ->{
-                    if(inst.rd instanceof VirtualRegister v_reg){
+                    if(inst.rd instanceof VirtualRegister){
+                        VirtualRegister v_reg = (VirtualRegister) inst.rd;
                         if(v_reg.colour == -1){
                             if(!reg_name_order_table.containsKey(v_reg.GetName())){
                                 function.stack_alloc_update();
@@ -110,7 +114,8 @@ public class RegAllocateStack {
                             }
                         }
                     }
-                    if(inst.rs1 instanceof VirtualRegister v_reg){
+                    if(inst.rs1 instanceof VirtualRegister){
+                        VirtualRegister v_reg = (VirtualRegister) inst.rs1;
                         if(v_reg.colour == -1){
                             if(!reg_name_order_table.containsKey(v_reg.GetName())){
                                 function.stack_alloc_update();
@@ -118,7 +123,8 @@ public class RegAllocateStack {
                             }
                         }
                     }
-                    if(inst.rs2 instanceof VirtualRegister v_reg){
+                    if(inst.rs2 instanceof VirtualRegister){
+                        VirtualRegister v_reg = (VirtualRegister) inst.rs2;
                         if(v_reg.colour == -1){
                             if(!reg_name_order_table.containsKey(v_reg.GetName())){
                                 function.stack_alloc_update();

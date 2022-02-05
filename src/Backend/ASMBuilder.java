@@ -225,7 +225,7 @@ public class ASMBuilder implements IRVisitor {
         new Move_Inst(nowBlock).addBaseReg(new VirtualRegister(nowFunction.virtual_index++,1),tmpReg);
         if(!(it.type instanceof VoidType)){
             Register returnValue = new VirtualRegister(nowFunction.virtual_index++);
-            new Move_Inst(nowBlock).addBaseReg(returnValue,new VirtualRegister(10, nowFunction.virtual_index++));
+            new Move_Inst(nowBlock).addBaseReg(returnValue,new VirtualRegister( nowFunction.virtual_index++,10));
             it.ASMOp = returnValue;
         }
     }
@@ -274,12 +274,12 @@ public class ASMBuilder implements IRVisitor {
         it.ASMOp = new GlobalVariable(it.name,null);
     }
 
-    private void load_immediate_to_reg(BaseReg imm){
+    private BaseReg load_immediate_to_reg(BaseReg imm){
         if(imm instanceof Immediate tmp_imm){
             imm = new VirtualRegister(nowFunction.virtual_index++);
             new Li_Inst(nowBlock).addBaseReg(imm,tmp_imm);
         }
-
+        return imm;
     }
 
     @Override
@@ -288,8 +288,8 @@ public class ASMBuilder implements IRVisitor {
         it.operandList.forEach(this::recursively_visit);
         BaseReg rs1 = it.getOperand(0).ASMOp;
         BaseReg rs2 = it.getOperand(1).ASMOp;
-        load_immediate_to_reg(rs1);
-        load_immediate_to_reg(rs2);
+        rs1 = load_immediate_to_reg(rs1);
+        rs2 = load_immediate_to_reg(rs2);
         switch (it.method){
             case eq -> {
                 new Arithmetic_Inst(nowBlock,"xor").addBaseReg(newOperand,rs1,rs2);
@@ -342,7 +342,7 @@ public class ASMBuilder implements IRVisitor {
         recursively_visit(it.getOperand(0));
         BaseReg returnValue = it.getOperand(0).ASMOp;
         assert returnValue instanceof Register;
-        new Move_Inst(nowBlock).addBaseReg(new VirtualRegister(nowFunction.virtual_index++),returnValue);
+        new Move_Inst(nowBlock).addBaseReg(new VirtualRegister(nowFunction.virtual_index++,10),returnValue);
         it.ASMOp = null;
     }
 

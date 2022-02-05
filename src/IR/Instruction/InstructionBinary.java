@@ -2,9 +2,7 @@ package IR.Instruction;
 
 import IR.IRBasicBlock;
 import IR.IRVisitor;
-import IR.Operand.Operand;
 import IR.Operand.Value;
-import IR.TypeSystem.PointerType;
 
 public class InstructionBinary extends Instruction{
 
@@ -26,7 +24,7 @@ public class InstructionBinary extends Instruction{
 
     @Override
     public String toString(){
-        return GetName() + " = " + operation.toString() + " " + getOp1().printValueString() + ", " + getOp2().toString();
+        return GetName() + " = " + operation.toString() + " " + getOp1().printValueString() + ", " + getOp2().GetName();
     }
 
     @Override

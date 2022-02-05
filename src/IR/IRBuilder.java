@@ -77,8 +77,10 @@ public class IRBuilder implements ASTVisitor {
     }
 
     private Value getAddress(ASTNode node){
-        if(node instanceof AtomExprNode && ((AtomExprNode) node).constNode.type == ConstNode.constType.Identifier){
-            String name = ((AtomExprNode)node).constNode.name;
+        if((node instanceof ConstNode && ((ConstNode)node).type.equals(ConstNode.constType.Identifier)) || (node instanceof AtomExprNode && ((AtomExprNode)node).constNode.type == ConstNode.constType.Identifier)){
+            String name;
+            if(node instanceof ConstNode)name = ((ConstNode) node).name;
+            else name = ((AtomExprNode)node).constNode.name;
             Value returnValue = nowScope.getValue(name);
             if(nowScope.isClassMember(name)){
                 assert nowClass != null;
@@ -211,7 +213,7 @@ public class IRBuilder implements ASTVisitor {
                     for (var i : function.paraList)
                         functionType.addPara(getType(i.type),i.name);
                 }
-                IRFunction newFunction = new IRFunction("_ir_f_" + name,functionType);
+                IRFunction newFunction = new IRFunction("_f_" + name,functionType);
                 newFunction.isBuiltin = function.isBuiltin;
                 functionTable.put(name,newFunction);
                 build_module.addFunc(newFunction);
@@ -397,7 +399,7 @@ public class IRBuilder implements ASTVisitor {
     public void visit(ReturnStmtNode it) {
         if(!nowScope.validity)return;
         if(it.expr != null){
-            it.accept(this);
+            it.expr.accept(this);
             Value returnValue = it.expr.IROperand;
             if(returnValue instanceof StringConst){
                 returnValue = getStrPtr(returnValue);
@@ -843,6 +845,9 @@ public class IRBuilder implements ASTVisitor {
         nowFunction = nowClass == null ? functionTable.get(it.func_name) : functionTable.get("_" + nowClass.name + "_" + it.func_name);
         FunctionType funcType = (FunctionType) nowFunction.type;
         nowScope = new IRScope(nowScope, IRScope.scope_type.Function);
+        //entryBlock set
+        new IRBasicBlock(nowFunction.name,nowFunction);
+        //exitBlock set
         IRBasicBlock exitBlock = new IRBasicBlock(nowFunction.name,nowFunction);
         Value returnValue;
         if(!funcType.toString().equals("void")){
@@ -949,5 +954,6 @@ public class IRBuilder implements ASTVisitor {
     @Override
     public void visit(AtomExprNode it) {
         it.constNode.accept(this);
+        it.IROperand = it.constNode.IROperand;
     }
 }

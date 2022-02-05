@@ -15,18 +15,18 @@ public class IRBasicBlock extends Value {
     public IRFunction function_belongs_to;
 
     public IRBasicBlock(String _name, IRFunction _parent_func){
-        super(_name,new LabelType());
+        super(_name+"_block",new LabelType());
+        function_belongs_to = _parent_func;
+        _parent_func.addBlock(this);
         InstList = new LinkedList<>();
         terminalInst = null;
-        function_belongs_to = _parent_func;
+
     }
 
     public void push_back_inst(Instruction Inst){
         if(Inst instanceof InstructionBr || Inst instanceof InstructionRet){
             if(terminalInst == null){
                 terminalInst = Inst;
-            }else{
-                throw new RuntimeException("[Debug]: set terminator twice!");
             }
         }
         else InstList.add(Inst);

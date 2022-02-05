@@ -7,7 +7,7 @@ public class LabelType extends IRType{
 
     @Override
     public String toString(){
-        return "Label";
+        return "label";
     }
 
     @Override

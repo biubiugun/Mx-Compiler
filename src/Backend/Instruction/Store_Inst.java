@@ -19,6 +19,6 @@ public class Store_Inst extends ASMInstruction{
 
     @Override
     public String print_ASM_string(){
-        return operator_name + "\t" + rs2.GetName() + ", " + ((Register)rs1).offset + "(" + rs1.GetName() + ")";
+        return operator_name + "\t" + rs2.GetName() + ", " + ((Register)rs1).offset.value + "(" + rs1.GetName() + ")";
     }
 }
