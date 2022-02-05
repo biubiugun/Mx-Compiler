@@ -19,7 +19,7 @@ public class ASMBasicBlock extends BaseReg {
 
     public String print_ASM_string(){
         StringBuilder str = new StringBuilder();
-        str.append(GetName()).append("\n");
+        str.append(GetName()).append(":\n");
         InstList.forEach(inst -> {
             str.append("\t").append(inst.print_ASM_string()).append("\n");
         });
