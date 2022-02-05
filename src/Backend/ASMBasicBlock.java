@@ -9,7 +9,7 @@ public class ASMBasicBlock extends BaseReg {
     public LinkedList<ASMInstruction> InstList = new LinkedList<>();
 
     public ASMBasicBlock(String _name,ASMFunction _func){
-        super(_name);
+        super("." + _name);
         _func.addBlock(this);
     }
 
