@@ -16,5 +16,5 @@ public class BoolType extends SingleValueType{
     }
 
     @Override
-    public int byteSize(){return 1;}
+    public int byteSize(){return 8;}
 }

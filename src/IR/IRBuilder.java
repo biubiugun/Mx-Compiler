@@ -64,7 +64,7 @@ public class IRBuilder implements ASTVisitor {
 
     private Value getStrPtr(Value str){
         assert str instanceof StringConst;
-        InstructionGetelementptr ptr = new InstructionGetelementptr(new IntegerType(8),str,nowBlock);
+        InstructionGetelementptr ptr = new InstructionGetelementptr(new PointerType(new IntegerType(8),1),str,nowBlock);
         ptr.addIndex(new IntegerConst(0)).addIndex(new IntegerConst(0));
         return ptr;
     }
@@ -194,30 +194,30 @@ public class IRBuilder implements ASTVisitor {
 
     public void builder_initialize(){
         gScope.classTable.forEach((name,scope) -> {
-                switch (name){
-                    case "int" -> typeTable.put(name,new IntegerType(32));
-                    case "bool" -> typeTable.put(name,new BoolType());
-                    case "string" -> typeTable.put(name,new PointerType(new IntegerType(8),1));
-                    default -> {
-                        StructType _class = new StructType(name);
-                        typeTable.put(name,new PointerType(_class,1));
-                        build_module.addClass(_class);
+                    switch (name){
+                        case "int" -> typeTable.put(name,new IntegerType(32));
+                        case "bool" -> typeTable.put(name,new BoolType());
+                        case "string" -> typeTable.put(name,new PointerType(new IntegerType(8),1));
+                        default -> {
+                            StructType _class = new StructType(name);
+                            typeTable.put(name,new PointerType(_class,1));
+                            build_module.addClass(_class);
+                        }
                     }
                 }
-            }
         );
         typeTable.put("void",new VoidType());
         gScope.functionTable.forEach((name,function) -> {
-                FunctionType functionType = new FunctionType(getType(function.typename));
-                if(function.paraList != null){
-                    for (var i : function.paraList)
-                        functionType.addPara(getType(i.type),i.name);
+                    FunctionType functionType = new FunctionType(getType(function.typename));
+                    if(function.paraList != null){
+                        for (var i : function.paraList)
+                            functionType.addPara(getType(i.type),i.name);
+                    }
+                    IRFunction newFunction = new IRFunction("_f_" + name,functionType);
+                    newFunction.isBuiltin = function.isBuiltin;
+                    functionTable.put(name,newFunction);
+                    build_module.addFunc(newFunction);
                 }
-                IRFunction newFunction = new IRFunction("_f_" + name,functionType);
-                newFunction.isBuiltin = function.isBuiltin;
-                functionTable.put(name,newFunction);
-                build_module.addFunc(newFunction);
-            }
         );
         gScope.classTable.forEach((name,scope) -> {
             if(!name.equals("int") && !name.equals("bool")){
@@ -803,8 +803,8 @@ public class IRBuilder implements ASTVisitor {
                         case And -> newOperand = new InstructionBinary(nowBlock,rs1,rs2,Operation.and);
                         case Less -> {
                             if(rs2 instanceof NullConst)rs2.type = rs1.type;
-                                newOperand = new InstructionIcmp(nowBlock,rs1,rs2,cmp_method.slt);
-                                newOperand = new InstructionZext(newOperand,new BoolType(),nowBlock);
+                            newOperand = new InstructionIcmp(nowBlock,rs1,rs2,cmp_method.slt);
+                            newOperand = new InstructionZext(newOperand,new BoolType(),nowBlock);
                         }
                         case Greater -> {
                             if(rs2 instanceof NullConst)rs2.type = rs1.type;
@@ -930,6 +930,12 @@ public class IRBuilder implements ASTVisitor {
             case STRING -> {
                 StringConst str = stringTable.get(it.name);
                 if(str == null){
+                    it.name = it.name.substring(1,it.name.length() - 1)
+                            .replace("\\\\","\\")
+                            .replace("\\n","\n")
+                            .replace("\\\"","\"")
+                            .replace("\\t","\t")
+                            + "\0";
                     str = new StringConst(it.name);
                     build_module.addStr(str);
                     stringTable.put(it.name,str);
