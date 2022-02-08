@@ -22,7 +22,7 @@ public class PhysicalRegister extends Register{
     public PhysicalRegister(VirtualRegister _vReg){
         super(physical_register_nameList.get(_vReg.colour));
         colour = _vReg.colour;
-        offset = new Immediate(0);
+        offset = _vReg.offset;
     }
 
     public PhysicalRegister(int _colour,VirtualRegister _vReg){
