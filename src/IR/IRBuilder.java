@@ -70,7 +70,7 @@ public class IRBuilder implements ASTVisitor {
     }
 
     private Value setArraySize(Value address){
-        Value i32_pointer = new InstructionBitcast(address,new IntegerType(32),nowBlock);
+        Value i32_pointer = new InstructionBitcast(address,new PointerType(new IntegerType(32),1),nowBlock);
         InstructionGetelementptr bias_address = new InstructionGetelementptr(new PointerType(new IntegerType(32),1),i32_pointer,nowBlock);
         bias_address.addIndex(new IntegerConst(-1));
         return new InstructionLoad("array_size",bias_address,nowBlock);
@@ -209,6 +209,10 @@ public class IRBuilder implements ASTVisitor {
         typeTable.put("void",new VoidType());
         gScope.functionTable.forEach((name,function) -> {
                     FunctionType functionType = new FunctionType(getType(function.typename));
+                    int w = 0;
+                    if(name.equals("_malloc")){
+                        w = 1;
+                    }
                     if(function.paraList != null){
                         for (var i : function.paraList)
                             functionType.addPara(getType(i.type),i.name);
@@ -447,9 +451,9 @@ public class IRBuilder implements ASTVisitor {
             if(it.init1 != null)it.init1.accept(this);
             if(it.init2 != null)it.init2.accept(this);
         }
-        IRBasicBlock conditionBlock = new IRBasicBlock("for_condition_",nowFunction);
-        IRBasicBlock iterBlock = new IRBasicBlock("for_iter_",nowFunction);
-        IRBasicBlock loopBlock = new IRBasicBlock("for_loopBody_",nowFunction);
+        IRBasicBlock conditionBlock = new IRBasicBlock("for_condition",nowFunction);
+        IRBasicBlock iterBlock = new IRBasicBlock("for_iter",nowFunction);
+        IRBasicBlock loopBlock = new IRBasicBlock("for_loopBody",nowFunction);
         IRBasicBlock termBlock = new IRBasicBlock(nowFunction.name,nowFunction);
         continueBlocks.push(iterBlock);breakBlocks.push(termBlock);
         new InstructionBr(nowBlock,conditionBlock);

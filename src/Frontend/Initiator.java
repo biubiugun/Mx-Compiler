@@ -59,6 +59,7 @@ public class Initiator implements ASTVisitor{
 
         // named for _malloc so that user can not call this function
         ArrayList<varDeclarationNode> tmp_List = new ArrayList<>();
+        tmp_List.add(new varDeclarationNode(null,"n",null,new TypeNode(null,"int")));
         FuncDefNode tmp = new FuncDefNode(null,new TypeNode(null,"string"),"_malloc",tmp_List,null);
         tmp.isBuiltin = true;
         initScope.setFunc("_malloc",tmp);
