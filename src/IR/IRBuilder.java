@@ -435,7 +435,7 @@ public class IRBuilder implements ASTVisitor {
         new InstructionBr(nowBlock,conditionBlock);
         nowBlock = termBlock;
         continueBlocks.pop();breakBlocks.pop();
-        nowScope.Predecessor();
+        nowScope = nowScope.Predecessor();
     }
 
     @Override
@@ -473,7 +473,7 @@ public class IRBuilder implements ASTVisitor {
         new InstructionBr(nowBlock,conditionBlock);
         nowBlock = termBlock;
         continueBlocks.pop();breakBlocks.pop();
-        nowScope.Predecessor();
+        nowScope = nowScope.Predecessor();
     }
 
     @Override
