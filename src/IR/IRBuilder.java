@@ -421,11 +421,12 @@ public class IRBuilder implements ASTVisitor {
     public void visit(WhileStmtNode it) {
         if(!nowScope.validity)return;
         nowScope = new IRScope(nowScope, IRScope.scope_type.Flow);
-        IRBasicBlock conditionBlock = new IRBasicBlock("while_condition_",nowFunction);
-        IRBasicBlock loopBlock = new IRBasicBlock("while_loopBody_",nowFunction);
+        IRBasicBlock conditionBlock = new IRBasicBlock("while_condition",nowFunction);
+        IRBasicBlock loopBlock = new IRBasicBlock("while_loopBody",nowFunction);
         IRBasicBlock termBlock = new IRBasicBlock(nowFunction.name,nowFunction);
         continueBlocks.push(conditionBlock);
         breakBlocks.push(nowBlock);
+        new InstructionBr(nowBlock,conditionBlock);
         nowBlock = conditionBlock;
         it.condition.accept(this);
         addCtrl(nowBlock,loopBlock,termBlock,it.condition.IROperand);
@@ -850,7 +851,7 @@ public class IRBuilder implements ASTVisitor {
         FunctionType funcType = (FunctionType) nowFunction.type;
         nowScope = new IRScope(nowScope, IRScope.scope_type.Function);
         //entryBlock set
-        new IRBasicBlock(nowFunction.name,nowFunction);
+        IRBasicBlock entryBlock = new IRBasicBlock(nowFunction.name,nowFunction);
         //exitBlock set
         IRBasicBlock exitBlock = new IRBasicBlock(nowFunction.name,nowFunction);
         Value returnValue;
@@ -866,6 +867,10 @@ public class IRBuilder implements ASTVisitor {
             InstructionAlloc real_arg = new InstructionAlloc("_arg",arg.type,nowFunction.blockList.get(0));
             new InstructionStore(arg,real_arg,nowBlock);
             nowScope.setVariable(funcType.paraNameList.get(i),real_arg);
+        }
+        int w = 0;
+        if(it.func_name.equals("qpow")){
+            w = 1;
         }
         if(it.stmts != null)it.stmts.stmts.forEach(stmt -> stmt.accept(this));
         if(nowBlock.terminalInst == null)new InstructionBr(nowBlock,nowFunction.blockList.get(1)/* exit block */);
