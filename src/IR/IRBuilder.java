@@ -103,7 +103,7 @@ public class IRBuilder implements ASTVisitor {
             Value ptrAddress = getAddress(((IndexExprNode)node).objExpr);
             Value address = new InstructionLoad("_array",ptrAddress,nowBlock);
             ((IndexExprNode)node).indexExpr.accept(this);
-            InstructionGetelementptr biasAddress = new InstructionGetelementptr(new PointerType(address.type,1),address,nowBlock);
+            InstructionGetelementptr biasAddress = new InstructionGetelementptr(address.type,address,nowBlock);
             biasAddress.addIndex(((IndexExprNode)node).indexExpr.IROperand);
             return biasAddress;
         }else if(node instanceof SuffixExprNode || node instanceof PrefixExprNode){
@@ -245,7 +245,7 @@ public class IRBuilder implements ASTVisitor {
                     }
                     IRFunction newFunction = new IRFunction("_class_" + name + "_" + func_name,funcType);
                     newFunction.isBuiltin = func_node.isBuiltin;
-                    functionTable.put(func_name,newFunction);
+                    functionTable.put(newFunction.name,newFunction);
                     build_module.addFunc(newFunction);
                 });
                 if(!name.equals("string") && !functionTable.containsKey("_class_" + name + "_" + name)){
@@ -538,6 +538,7 @@ public class IRBuilder implements ASTVisitor {
             assert class_type instanceof IntegerType;
             class_name = "class_string";
         }
+        int w = 0;
         member_function = functionTable.get("_" + class_name + "_" + it.Func_name);
         assert member_function != null;
         if(it.paraList != null){
@@ -572,7 +573,7 @@ public class IRBuilder implements ASTVisitor {
             String class_name = it.typename.typename;
             StructType class_type = (StructType) typeTable.get(class_name).dePointed();
             newOperand = Malloc(new PointerType(class_type,1),new IntegerConst(class_type.byteSize()));
-            InstructionCall creator = new InstructionCall(functionTable.get("_" + class_name + "_" + class_name),nowBlock);
+            InstructionCall creator = new InstructionCall(functionTable.get("_" + class_type.name + "_" + class_name),nowBlock);
             creator.addArg(newOperand);
         }
         it.IROperand = newOperand;
@@ -867,10 +868,6 @@ public class IRBuilder implements ASTVisitor {
             InstructionAlloc real_arg = new InstructionAlloc("_arg",arg.type,nowFunction.blockList.get(0));
             new InstructionStore(arg,real_arg,nowBlock);
             nowScope.setVariable(funcType.paraNameList.get(i),real_arg);
-        }
-        int w = 0;
-        if(it.func_name.equals("qpow")){
-            w = 1;
         }
         if(it.stmts != null)it.stmts.stmts.forEach(stmt -> stmt.accept(this));
         if(nowBlock.terminalInst == null)new InstructionBr(nowBlock,nowFunction.blockList.get(1)/* exit block */);
