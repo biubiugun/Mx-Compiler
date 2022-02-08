@@ -234,7 +234,7 @@ public class IRBuilder implements ASTVisitor {
                 }
                 scope.functionTable.forEach((func_name,func_node) -> {
                     IRType returnType;
-                    if(func_node.typename == null){
+                    if(func_node.typename.typename == null){
                         returnType = new VoidType();
                     }else returnType = getType(func_node.typename);
                     FunctionType funcType = new FunctionType(returnType);
@@ -593,14 +593,19 @@ public class IRBuilder implements ASTVisitor {
         IRFunction function = null;
         Value this_ptr = null;
         String function_name = it.func_name.content;//func_name is an identifier but not expression
-        if(nowClass != null){
-            function = functionTable.get("_" + nowClass.name + "_" + function_name);
+//        if(nowClass != null){
+//            function = functionTable.get("_" + nowClass.name + "_" + function_name);
+//            this_ptr = nowScope.getValue("_this");
+//            assert this_ptr != null;
+//            this_ptr = new InstructionLoad("_this",this_ptr,nowBlock);
+//        }else {
+//            function = functionTable.get(function_name);
+//        }
+        if(nowClass != null)function = functionTable.get("_" + nowClass.name + "_" + function_name);
+        if(function != null){
             this_ptr = nowScope.getValue("_this");
-            assert this_ptr != null;
             this_ptr = new InstructionLoad("_this",this_ptr,nowBlock);
-        }else {
-            function = functionTable.get(function_name);
-        }
+        }else function = functionTable.get(function_name);
         assert function != null;
         if(it.paraList != null){
             for(int i = 0;i < it.paraList.size(); ++i){
