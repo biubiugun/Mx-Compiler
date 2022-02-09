@@ -568,7 +568,11 @@ public class IRBuilder implements ASTVisitor {
         Value newOperand;
         if(it.dim > 0){
             LinkedList<ExprNode> initList = new LinkedList<>(it.exprList);
-            newOperand = recursively_create(initList,new PointerType(getType(it.type),it.dim));
+            int w = 0;
+            if(nowBlock.name.equals("_f_dijkstra_block")){
+                w = 1;
+            }
+            newOperand = recursively_create(initList,new PointerType(getType(it.type),it.dim - it.type.dim));
         }else {
             String class_name = it.typename.typename;
             StructType class_type = (StructType) typeTable.get(class_name).dePointed();
