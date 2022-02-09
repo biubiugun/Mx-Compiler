@@ -21,12 +21,13 @@ public class Main {
 
     public static void main(String[] args) throws Exception{
 
-//        String name = "src/selftest/test.mx";
-//        InputStream input = new FileInputStream(name);
-        InputStream input = System.in;
-        PrintStream os = System.out;
+        String name = "src/selftest/test.mx";
+        InputStream input = new FileInputStream(name);
+//        InputStream input = System.in;
+//        PrintStream os = System.out;
+        PrintStream os;
         boolean semantic_test_only = false;
-        boolean ir_test = false;
+        boolean ir_test = true;
         for (int i = 0;i < args.length; ++i){
             if(args[i].charAt(0) == '-'){
                 switch (args[i]) {
@@ -71,9 +72,11 @@ public class Main {
                 ir_builder.visit(rt);
                 ir_builder.process_initialize();
                 if(ir_test){
+                    os = new PrintStream(new FileOutputStream("test.ll"));
                     os.println(ir_module);
                 }
                 //asm
+                os = new PrintStream(new FileOutputStream("test.s"));
                 ASMBuilder asm_builder = new ASMBuilder();
                 asm_builder.visit(ir_module);
 //                os.println(asm_builder.ASM_build_module.print_ASM_string());
