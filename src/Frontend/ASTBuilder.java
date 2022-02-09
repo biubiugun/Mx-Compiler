@@ -178,12 +178,18 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
         if(ctx.init() == null){
             if(ctx.cond() != null){
                 cond = (ExprNode) visit(ctx.cond().expression());
-                if(ctx.init() != null) {
+                if(ctx.iter() != null) {
                     iter = (ExprNode) visit(ctx.iter().expression());
                     return new ForStmtNode(new position(ctx.getStart()), (ExprNode) null,cond,iter,thenStmt);
                 }
                 else return new ForStmtNode(new position(ctx.getStart()), (ExprNode) null,cond,null,thenStmt);
-            }else return new ForStmtNode(new position(ctx.getStart()), (ExprNode) null,null,null,thenStmt);
+            }else {
+                if(ctx.iter() != null) {
+                    iter = (ExprNode) visit(ctx.iter().expression());
+                    return new ForStmtNode(new position(ctx.getStart()), (ExprNode) null,null,iter,thenStmt);
+                }
+                else return new ForStmtNode(new position(ctx.getStart()), (ExprNode) null,null,null,thenStmt);
+            }
         }
         if(ctx.init().varType() != null){
             varDeclarationNode init;
@@ -193,22 +199,34 @@ public class ASTBuilder extends MxstarBaseVisitor<ASTNode>{
             else init = new varDeclarationNode(new position(ctx.init().getStart()),ctx.init().varDeclaration().Identifier().getText(),null,(TypeNode) visit(ctx.init().varType()));
             if(ctx.cond() != null){
                 cond = (ExprNode) visit(ctx.cond().expression());
-                if(ctx.init() != null) {
+                if(ctx.iter() != null) {
                     iter = (ExprNode) visit(ctx.iter().expression());
                     return new ForStmtNode(new position(ctx.getStart()),init,cond,iter,thenStmt);
                 }
                 else return new ForStmtNode(new position(ctx.getStart()), init,cond,null,thenStmt);
-            }else return new ForStmtNode(new position(ctx.getStart()), init,null,null,thenStmt);
+            }else {
+                if(ctx.iter() != null) {
+                    iter = (ExprNode) visit(ctx.iter().expression());
+                    return new ForStmtNode(new position(ctx.getStart()),init,null,iter,thenStmt);
+                }
+                else return new ForStmtNode(new position(ctx.getStart()), init,null,null,thenStmt);
+            }
         }else{
             ExprNode init = (ExprNode) visit(ctx.init().expression());
             if(ctx.cond() != null){
                 cond = (ExprNode) visit(ctx.cond().expression());
-                if(ctx.init() != null) {
+                if(ctx.iter() != null) {
                     iter = (ExprNode) visit(ctx.iter().expression());
                     return new ForStmtNode(new position(ctx.getStart()), init,cond,iter,thenStmt);
                 }
                 else return new ForStmtNode(new position(ctx.getStart()), init,cond,null,thenStmt);
-            }else return new ForStmtNode(new position(ctx.getStart()), init,null,null,thenStmt);
+            }else {
+                if(ctx.iter() != null) {
+                    iter = (ExprNode) visit(ctx.iter().expression());
+                    return new ForStmtNode(new position(ctx.getStart()), init,null,iter,thenStmt);
+                }
+                else return new ForStmtNode(new position(ctx.getStart()), init,null,null,thenStmt);
+            }
         }
     }
 
